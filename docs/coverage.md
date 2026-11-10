@@ -1,6 +1,6 @@
 # Public SDK coverage inventory
 
-SDK: `@toolbelt/sdk` 0.2.0-dev.2, immutable public GitHub package. `COVERAGE` in
+SDK: `@toolbelt/sdk` 0.2.0-dev.4, immutable public GitHub package. `COVERAGE` in
 `src/scenarios.ts` is an exhaustive `Record<Node['type'], string>`; the test traverses real
 scenario trees and compares all node kinds. All field variants are asserted separately.
 
@@ -37,7 +37,7 @@ older hosts reject it before activation. Individual third-party plugins can put 
 capabilities in manifest.optional and gate those feature nodes based on negotiated host
 support. The explorer's lifecycle deferral is explicit and retryable.
 
-Validation: typecheck, seven scenario/interaction/negotiation/migration/sort tests and clean archive execution of all
+Validation: typecheck, eight scenario/interaction/negotiation/migration/sort/handoff tests and clean archive execution of all
 five screens/quick plus preparation deferral/retry/shutdown pass locally. Host extraction
 must use the exact strict production validator; visual/keyboard/theme/motion acceptance
 requires Toolbelt Plugin Tester and remains a cross-repository integration gate.
@@ -45,3 +45,8 @@ requires Toolbelt Plugin Tester and remains a cross-repository integration gate.
 Native production-renderer evidence and exact signed-tester capture limits are recorded in
 [docs/native-acceptance.md](native-acceptance.md). Runtime evaluation bytes remain pinned
 to architecture2-8e8fca9; follow-up evidence/test-only commits do not change that archive.
+
+`native.handoff` is optional. Lifecycle's harmless counter action is declared in generic
+`handoffActions`; a supporting host can dismiss the popover before delivery. Unsupported
+hosts still increment safely and show an explicit fallback toast. Tests execute both
+branches; no real terminal/process focus is attempted by the demonstrator.

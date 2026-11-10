@@ -24,7 +24,8 @@
       "lifecycle"
     ],
     "optional": [
-      "ui.conversation"
+      "ui.conversation",
+      "native.handoff"
     ]
   },
   "data": {
@@ -69,5 +70,8 @@
   "quickView": true,
   "migration": {
     "entry": "migrate.js"
-  }
+  },
+  "handoffActions": [
+    "handoff-count"
+  ]
 }
