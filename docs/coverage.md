@@ -1,57 +1,45 @@
-# Public SDK coverage inventory
+# Public SDK coverage
 
-SDK: `@toolbelt/sdk` 0.2.0-dev.4, immutable public GitHub package. `COVERAGE` in
-`src/scenarios.ts` is an exhaustive `Record<Node['type'], string>`; the test traverses real
-scenario trees and compares all node kinds. All field variants are asserted separately.
+`src/scenarios.ts` contains the scenario definitions and exhaustive
+`Record<Node['type'], string>` map. Tests compare that map with rendered trees, exercise
+field variants and events, and execute both optional-capability branches. Keep this
+inventory synchronized with the pinned public SDK.
 
-| SDK capability | Scenario |
+| SDK feature | Scenario and behavior |
 | --- | --- |
-| page, stack row/column, card | Gallery and every screen; actions, summary, search/highlight, gap, semantic tones |
-| text, markdown, details, empty | Gallery; mono text, all tones, headings/links/code/list; intentional empty state |
-| stats | Gallery + quick; value, hints, tones, future/past relative timestamps |
-| progress | Gallery determinate/indeterminate, start time, semantic tone; Lifecycle |
-| list | Gallery icons/hues + quick; title/subtitle/meta/metaAt/dot/actions/empty |
-| table columns | Tables; grow/minWidth, align, mono, priority/optional, sortable/sortDesc |
-| decorated cells | Tables; string/number/null, sub/mono/tone/dot/strong/tags/marks/chips/badge/spark/at/icon |
-| groups and nesting | Tables; string groups, id/label/strong/sub/tag/summary/muted/icon, open parent and children |
-| row details/stats/targets | Tables; inspector sections/copy/dot/actions/actionRow, trends/tone, target chooser |
-| table actions | Tables; inline/primary/disabled/checked/group/key/tone/confirm, row action subsets and bulk rowIds |
-| search/filter/sort events | Tables; explicit selected filters/counts/dots, query highlighting, sort state |
-| form text | Forms; placeholder/description/sensitive fake secret |
-| form select/switch | Forms; options/value/description |
-| form environment | Forms; selected/secret/editable fixture entries, description |
-| segmented | Forms; values and option icons, field event |
-| dialog | Toolbar; wide/resizable, title/description/children, primary/cancel actions, close event |
-| log | Output; timestamps/tones/follow/empty, bounded event history |
-| terminal | Output; ANSI colors, append/follow/empty, renderer text zoom |
-| conversation | Output; all four roles, author/time/Markdown, tool name/detail and empty |
-| assets/icons | Gallery/Table; lucide, declared namespaced SVG, app/file Finder icons |
-| keyboard | Tab shortcut patterns g/t/f/o/l; row i/d/p/t keys, default navigation/menus |
-| badge/toast/clipboard | Toolbar + Lifecycle; numeric/string/null badge, success toast with undo action/payload, copy |
-| prepare/ready/stop | Lifecycle; startup handshake + ready, defer/retry reason, stop persistence |
-| screens/quick | Five main-window screens plus shared compact quick view |
-| package/data/payload boundary | Declared asset bundled; payload/packageRoot resolve harmless text fixture; schema-1 migration initializes managed data idempotently |
+| page, stack, card | Gallery and other screens: actions, summary, search/highlight, row/column direction, spacing and semantic tones |
+| text, markdown, details, empty | Gallery: monospace, tones, headings/links/code/lists, label/value pairs and intentional empty state |
+| stats | Gallery and quick view: values, hints, tones and relative timestamps |
+| progress | Gallery and Lifecycle: determinate/indeterminate progress, start time and tones |
+| list | Gallery icons/hues and quick view: title/subtitle, metadata/time, dots, actions and empty content |
+| table columns | Tables: grow/minWidth, alignment, monospace, priority/optional visibility, sortable direction |
+| table cells | Tables: string/number/null, subtitle, tone, dot, strong text, tags, marks, chips, badge, sparkline, time and icon |
+| groups and nested rows | Tables: string/structured/nested groups, branch/tag/summary, muted/icon, expanded children |
+| inspector | Tables: sectioned details, copy controls, item actions/actionRow, statistics/trends and tones |
+| target chooser | Tables: one action with parent/child fixture targets |
+| row/bulk actions | Tables: inline/primary/disabled/group/key/destructive/confirmation patterns, row action subsets and selected rowIds |
+| search/filter/sort | Tables: selected filters/counts/dots, highlights and actual filtered/sorted fixture rows |
+| text field | Forms: placeholder, description and fake sensitive value |
+| select/switch fields | Forms: options, value, description and toggles |
+| environment field | Forms: selected and secret entries with editable fixture keys/values |
+| segmented control | Forms: values and option icons, field event |
+| dialog | Toolbar: title/description/children, wide/resizable/maximize behavior, primary/cancel/close events |
+| log | Output: timestamps, tones, follow, empty state and bounded event history |
+| terminal | Output: ANSI fixture lines, append/follow/empty, text zoom and wrapping |
+| conversation | Output: all four roles, author/time/Markdown, expandable tool name/input/output, empty and optional fallback |
+| assets/icons | Gallery and Tables: lucide names, declared namespaced SVG and app/file Finder pathways |
+| keyboard | Declared screen shortcuts, table P/T action keys and host navigation/menu/dialog patterns |
+| badge/toast/clipboard | Toolbar and Lifecycle: number/string/null badge, toast action/payload, undo and fixture copy |
+| lifecycle | Startup/ready, preparation defer/retry, shutdown persistence and schema-1 initialization |
+| data/package/payload | Managed counter, immutable packageRoot, payload text resolution and declared asset |
+| main and quick surfaces | Five screens and a compact view sharing the same runtime/counter |
+| optional native handoff | Lifecycle's declared counter action, supported-host behavior and safe fallback |
 
-Optional capability fallback: this demonstrator requires every capability it exercises;
-older hosts reject it before activation. Individual third-party plugins can put optional
-capabilities in manifest.optional and gate those feature nodes based on negotiated host
-support. The explorer's lifecycle deferral is explicit and retryable.
+The `ui.conversation` fallback uses plain text when negotiated support is absent.
+The `native.handoff` fallback still counts the fixture event and explains the missing
+handoff support. Capability tests advertise every required manifest capability and vary
+only optional support. The demo does not perform external terminal focus or real updates.
 
-Validation: typecheck, eight scenario/interaction/negotiation/migration/sort/handoff tests and clean archive execution of all
-five screens/quick plus preparation deferral/retry/shutdown pass locally. Host extraction
-must use the exact strict production validator; visual/keyboard/theme/motion acceptance
-requires Toolbelt Plugin Tester and remains a cross-repository integration gate.
-
-Native production-renderer evidence and exact signed-tester capture limits are recorded in
-[docs/native-acceptance.md](native-acceptance.md). Runtime evaluation bytes remain pinned
-to architecture2-8e8fca9; follow-up evidence/test-only commits do not change that archive.
-
-`native.handoff` is optional. Lifecycle's harmless counter action is declared in generic
-`handoffActions`; a supporting host can dismiss the popover before delivery. Unsupported
-hosts still increment safely and show an explicit fallback toast. Tests execute both
-branches; no real terminal/process focus is attempted by the demonstrator.
-
-Final SDK4 runtime archive: `architecture2-c89e2e9`, SHA-256
-`e6d9e8694c8713f6737b30e8f1550776ad695c6321a429c1e0bf0f5a008e30d0`.
-Visible wide inspectors, expanded tool details and corrected 414px layout have now passed
-production-renderer browser verification; see [browser-acceptance.md](browser-acceptance.md).
+For a new SDK feature, add its manifest declaration if needed, a visible scenario, event
+handling/fallback and meaningful tests. Verify the extracted release archive and use the
+production Plugin Tester for layout, keyboard, appearance and quick-view behavior.

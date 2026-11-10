@@ -1,32 +1,33 @@
 # toolbelt-sdk-demo — notes for coding agents
 
-The removable Toolbelt SDK demonstrator and capability conformance scenarios.
-See `README.md`.
+Read [README.md](README.md), [docs/architecture.md](docs/architecture.md) and the current
+[SDK coverage inventory](docs/coverage.md). This repository owns the removable SDK
+Explorer plugin and its conformance scenarios.
 
-## Workflow (required)
+## Workflow
 
-### Architecture v2 work (feat/architecture2)
+- Never use the no-mistakes tool, plugin, skill or pipeline. Work directly.
+- One agent per checkout. Stop and ask if unexpected edits appear.
+- Work on the assigned feature branch. Never commit directly to `main`; use a PR and let
+  CI pass. Main merges and stable publication require explicit user authorization. Do not
+  enable auto-merge unasked.
+- Add user-visible changes to `## Unreleased` in `CHANGELOG.md`. Feature PRs do not bump
+  versions; use a release PR.
+- Pin workflow actions to full SHAs and keep permissions minimal. Allowed actions are
+  GitHub-owned actions, `oven-sh/setup-bun` and `zizmorcore/zizmor-action`.
+- Preserve attribution, notices and release history.
 
-- Read [docs/architecture2.md](docs/architecture2.md) and its linked Toolbelt source-of-truth
-  specification before v2 work. This branch initially contains planning documentation only;
-  implementation requires a separate user assignment.
-- Keep all v2 work on `feat/architecture2`. Do not merge to `main`, enable auto-merge, publish
-  stable releases, or replace the user's working apps/data without a later explicit decision.
-  Committing and pushing this long-lived branch is authorized.
-- Never use the no-mistakes tool, plugin, skill, or pipeline. Work directly.
+## Implementation and validation
 
-- **Never commit to `main` directly.** Branch (`feat/…`, `fix/…`), open a pull request, let CI
-  pass, squash-merge. The PR title becomes the commit title on `main`. The `main` ruleset
-  enforces this (`.github/settings/`).
-- **One agent per checkout.** If `git status` shows changes you didn't make, stop and ask —
-  another session may be working here.
-- Add user-visible changes to `## Unreleased` in `CHANGELOG.md` in the same PR.
-- Don't bump the version in feature PRs; that happens in a release PR.
-- Workflow files: pin actions to full commit SHAs, keep `permissions` minimal. Only
-  GitHub-owned actions, `oven-sh/setup-bun` and `zizmorcore/zizmor-action` are allowed.
-- Use disposable fixtures only; never control real user processes or terminals.
-
-## Bun
-
-- Use `bun <file>`, `bun test`, `bun install`, `bun run <script>`, `bunx <pkg>` — not node,
-  jest/vitest, npm/yarn/pnpm or npx.
+- Use Bun commands, not node/npm/yarn/pnpm or alternate test runners. CI uses Bun 1.4.2.
+- Depend on the pinned public SDK package. Do not copy SDK source or import a host checkout.
+- Keep every scenario harmless. Use fixture data and isolated profiles; do not control
+  user processes/terminals, update actual software or modify real dotfiles.
+- Maintain stable plugin/screen ids, manifest compatibility, declared assets and schema.
+- Update scenarios, `COVERAGE`, inventory and tests together when using new SDK features.
+  Optional capabilities require executable fallback behavior.
+- Run `bun run typecheck`, `bun test`, `bun run package` and
+  `bun scripts/verify-package.ts`. Use Toolbelt Plugin Tester for visual/keyboard/native
+  surface work with disposable profiles.
+- Archives must contain all runtime dependencies and payloads and run after extraction
+  without source checkouts or ambient dependency directories.

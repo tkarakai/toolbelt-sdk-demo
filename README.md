@@ -1,35 +1,65 @@
 # Toolbelt SDK Explorer
 
-One removable plugin demonstrating the complete public Toolbelt SDK. It runs as a normal
-prebuilt plugin package using the production renderer, host and lifecycle. No browser
-JavaScript or custom React components are injected. All resources and interactions are
-fixtures: the demo does not run shell commands, update software or control real processes.
+SDK Explorer is a removable [Toolbelt](https://github.com/tkarakai/toolbelt) plugin showing
+how to build declarative plugin interfaces with the public SDK. Its screens use the
+production host and renderer. All resources are fixtures: it does not run shell commands,
+update software, control user processes or change dotfiles.
 
-Install the evaluation prerelease through Toolbelt's plugin manager, or open its archive in
-Toolbelt Plugin Tester. Tabs: Gallery (`g`), Tables (`t`), Forms (`f`), Output (`o`),
-Lifecycle (`l`), plus a menu-bar quick view. Host controls provide themes, zoom, resizing,
-keyboard navigation and reduced motion. The plugin can be disabled or removed normally.
-The host must preserve removal across app upgrades; this plugin never reinstalls itself.
+## Install and use
 
-## Develop and package
+In Toolbelt Settings → Plugins, enter `tkarakai/toolbelt-sdk-demo`, select a release and
+approve execution. Enable prereleases when selecting a prerelease. You can also open the
+built archive in Toolbelt Plugin Tester. Toolbelt can include this same prebuilt package
+as its removable seed; the host preserves disable/removal choices across app upgrades.
 
-Bun 1.4.2: `bun install --frozen-lockfile`, `bun run typecheck`, `bun test`,
-`bun run package`, `bun scripts/verify-package.ts`. The SDK is pinned to its immutable
-`sdk-v0.2.0-dev.4` GitHub release asset. No Toolbelt source checkout is required.
+The Gallery, Tables, Forms, Output and Lifecycle tabs have `g`, `t`, `f`, `o` and `l`
+shortcuts, respectively. A menu-bar quick view shares the same counter and runtime.
+Use host settings and controls for themes, zoom, resizing, keyboard navigation and reduced
+motion. [Coverage](docs/coverage.md) maps public SDK features to their scenarios.
 
-The archive contains bundled JS, manifest and declared SVG asset. The package also carries a harmless opaque text fixture resolved by SDK payload/packageRoot APIs and an idempotent schema-1 initialization migration. The package descriptor
-binds the source commit, target, byte size and SHA-256. The host consumes these prebuilt
-bytes; it must never build this source during app assembly. Current target darwin-arm64.
+Lifecycle's Defer switch simulates an unsafe operation. Preparation reports a reason until
+you turn it off, allowing authors to inspect the host's deferred-upgrade behavior. The
+handoff counter is harmless: it counts an event rather than focusing an external app.
 
-Schema 1 stores only a counter in the managed data directory. Same-schema upgrades are an
-explicit no-op. Lifecycle can simulate unsafe preparation: enable Defer in Lifecycle,
-attempt an upgrade/unload, observe the reason, then disable Defer and retry. This is a
-fixture, not external work. Startup/ready and stop/persistence use the public SDK lifecycle.
+## Develop and verify
 
-See [coverage inventory](docs/coverage.md). Adding an SDK node without adding a scenario
-fails TypeScript's exhaustive coverage map and the rendered-tree test. CI tests the actual
-standalone archive without access to source files or ambient dependency directories.
+Use Bun 1.4.2 and run from the repository root:
 
-Architecture work remains on `feat/architecture2`; stable release/main merges belong to
-the user. This repository uses the same main PR/CI ruleset and pinned-action/security
-policies as Toolbelt and the independent plugins.
+```sh
+bun install --frozen-lockfile
+bun run typecheck
+bun test
+bun run package
+bun scripts/verify-package.ts
+```
+
+The SDK dependency is pinned by public package URL and lockfile. No sibling Toolbelt
+source checkout is required. See [architecture and authoring](docs/architecture.md).
+Use isolated tester profiles and disposable fixture data for visual and keyboard work.
+
+`bun run build` writes `dist/package` with bundled plugin/migration JavaScript, manifest,
+SVG asset, NOTICE and an opaque text payload. `bun run package` emits these files under
+`artifacts/`:
+
+- `toolbelt-sdk-demo-<version>-darwin-arm64.tar.gz`
+- the archive's `.sha256` file
+- `toolbelt-release.json`, binding repository, source commit, version, target, archive,
+  byte size and SHA-256
+
+## Publish and update
+
+For an authorized release, use a release PR for matching root package/manifest versions
+and the changelog. Build from the intended clean committed revision and run the checks
+above. Attach the archive, descriptor and checksum to a draft GitHub release, download and
+verify its assets, then publish. Use `--prerelease --latest=false` for prereleases. Stable
+publication requires an explicit maintainer decision. Published bytes are immutable;
+corrections require a new version.
+
+Toolbelt downloads the prebuilt package and installs updates only after approval. It owns
+compatibility checks, startup probes, snapshots and rollback; this plugin owns schema and
+migration behavior. Schema 1 persists only a counter in its managed data directory.
+
+When updating the SDK, pin the public asset URL, confirm the lockfile resolves that URL,
+then update scenarios, coverage and tests for the changed API. Required capabilities must
+be available before activation; optional features need an executable fallback based on
+`Context.capabilities`. The host builds no source from this repository.
