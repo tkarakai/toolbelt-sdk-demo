@@ -15,9 +15,9 @@ The host must preserve removal across app upgrades; this plugin never reinstalls
 
 Bun 1.4.2: `bun install --frozen-lockfile`, `bun run typecheck`, `bun test`,
 `bun run package`, `bun scripts/verify-package.ts`. The SDK is pinned to its immutable
-`sdk-v0.2.0-dev.1` GitHub release asset. No Toolbelt source checkout is required.
+`sdk-v0.2.0-dev.2` GitHub release asset. No Toolbelt source checkout is required.
 
-The archive contains bundled JS, manifest and declared SVG asset. The package descriptor
+The archive contains bundled JS, manifest and declared SVG asset. The package also carries a harmless opaque text fixture resolved by SDK payload/packageRoot APIs and an idempotent schema-1 initialization migration. The package descriptor
 binds the source commit, target, byte size and SHA-256. The host consumes these prebuilt
 bytes; it must never build this source during app assembly. Current target darwin-arm64.
 

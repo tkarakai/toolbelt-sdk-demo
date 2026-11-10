@@ -1,0 +1,1 @@
+Opaque payload fixture resolved through the public SDK. No executable runs.

@@ -1,6 +1,6 @@
 # Public SDK coverage inventory
 
-SDK: `@toolbelt/sdk` 0.2.0-dev.1, immutable public GitHub package. `COVERAGE` in
+SDK: `@toolbelt/sdk` 0.2.0-dev.2, immutable public GitHub package. `COVERAGE` in
 `src/scenarios.ts` is an exhaustive `Record<Node['type'], string>`; the test traverses real
 scenario trees and compares all node kinds. All field variants are asserted separately.
 
@@ -30,14 +30,14 @@ scenario trees and compares all node kinds. All field variants are asserted sepa
 | badge/toast/clipboard | Toolbar + Lifecycle; numeric/string/null badge, success toast with undo action/payload, copy |
 | prepare/ready/stop | Lifecycle; startup handshake + ready, defer/retry reason, stop persistence |
 | screens/quick | Five main-window screens plus shared compact quick view |
-| package/data/payload boundary | Declared asset bundled, managed schema-1 data, no opaque executable needed |
+| package/data/payload boundary | Declared asset bundled; payload/packageRoot resolve harmless text fixture; schema-1 migration initializes managed data idempotently |
 
 Optional capability fallback: this demonstrator requires every capability it exercises;
 older hosts reject it before activation. Individual third-party plugins can put optional
 capabilities in manifest.optional and gate those feature nodes based on negotiated host
 support. The explorer's lifecycle deferral is explicit and retryable.
 
-Validation: typecheck, three scenario/interaction tests and clean archive execution of all
+Validation: typecheck, six scenario/interaction/negotiation/migration tests and clean archive execution of all
 five screens/quick plus preparation deferral/retry/shutdown pass locally. Host extraction
 must use the exact strict production validator; visual/keyboard/theme/motion acceptance
 requires Toolbelt Plugin Tester and remains a cross-repository integration gate.
