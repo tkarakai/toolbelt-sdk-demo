@@ -37,7 +37,7 @@ older hosts reject it before activation. Individual third-party plugins can put 
 capabilities in manifest.optional and gate those feature nodes based on negotiated host
 support. The explorer's lifecycle deferral is explicit and retryable.
 
-Validation: typecheck, six scenario/interaction/negotiation/migration tests and clean archive execution of all
+Validation: typecheck, seven scenario/interaction/negotiation/migration/sort tests and clean archive execution of all
 five screens/quick plus preparation deferral/retry/shutdown pass locally. Host extraction
 must use the exact strict production validator; visual/keyboard/theme/motion acceptance
 requires Toolbelt Plugin Tester and remains a cross-repository integration gate.
