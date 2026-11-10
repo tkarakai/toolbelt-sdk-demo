@@ -41,3 +41,7 @@ Validation: typecheck, seven scenario/interaction/negotiation/migration/sort tes
 five screens/quick plus preparation deferral/retry/shutdown pass locally. Host extraction
 must use the exact strict production validator; visual/keyboard/theme/motion acceptance
 requires Toolbelt Plugin Tester and remains a cross-repository integration gate.
+
+Native production-renderer evidence and exact signed-tester capture limits are recorded in
+[docs/native-acceptance.md](native-acceptance.md). Runtime evaluation bytes remain pinned
+to architecture2-8e8fca9; follow-up evidence/test-only commits do not change that archive.
