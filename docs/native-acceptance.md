@@ -62,3 +62,8 @@ summary/roles were observed; tool-detail expansion was not separately exercised.
 Earlier native Tester8 screenshots and keyboard/quick-view/blur evidence are retained.
 All own real-app Bun/launcher processes were confirmed absent after explicit Quit. No user
 processes, terminal sessions, actual dotfiles or installed Toolbelt were changed.
+
+The remaining visible-inspector/tool-detail/narrow proof is now completed in Chrome using
+production renderer source; see [browser-acceptance.md](browser-acceptance.md). This also
+exercises the final SDK4 handoff counter scenario. Signed native capture remains a distinct
+platform automation limitation, not an unverified renderer gap.

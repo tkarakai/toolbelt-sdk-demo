@@ -50,3 +50,8 @@ to architecture2-8e8fca9; follow-up evidence/test-only commits do not change tha
 `handoffActions`; a supporting host can dismiss the popover before delivery. Unsupported
 hosts still increment safely and show an explicit fallback toast. Tests execute both
 branches; no real terminal/process focus is attempted by the demonstrator.
+
+Final SDK4 runtime archive: `architecture2-c89e2e9`, SHA-256
+`e6d9e8694c8713f6737b30e8f1550776ad695c6321a429c1e0bf0f5a008e30d0`.
+Visible wide inspectors, expanded tool details and corrected 414px layout have now passed
+production-renderer browser verification; see [browser-acceptance.md](browser-acceptance.md).
