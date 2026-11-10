@@ -34,7 +34,8 @@ bun scripts/verify-package.ts
 ```
 
 The SDK dependency is pinned by public package URL and lockfile. No sibling Toolbelt
-source checkout is required. See [architecture and authoring](docs/architecture.md).
+source checkout is required. See [architecture and authoring](docs/architecture.md) and
+the shared [Toolbelt plugin authoring and update guide](https://github.com/tkarakai/toolbelt/blob/main/docs/plugins.md).
 Use isolated tester profiles and disposable fixture data for visual and keyboard work.
 
 `bun run build` writes `dist/package` with bundled plugin/migration JavaScript, manifest,
