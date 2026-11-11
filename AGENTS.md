@@ -31,3 +31,7 @@ Explorer plugin and its conformance scenarios.
   surface work with disposable profiles.
 - Archives must contain all runtime dependencies and payloads and run after extraction
   without source checkouts or ambient dependency directories.
+
+Follow the [release procedure](docs/releases.md) for release PRs, validation, immutable assets,
+draft verification, publication and recovery. Local build/package scripts and CI do not
+publish releases.

@@ -49,12 +49,9 @@ SVG asset, NOTICE and an opaque text payload. `bun run package` emits these file
 
 ## Publish and update
 
-For an authorized release, use a release PR for matching root package/manifest versions
-and the changelog. Build from the intended clean committed revision and run the checks
-above. Attach the archive, descriptor and checksum to a draft GitHub release, download and
-verify its assets, then publish. Use `--prerelease --latest=false` for prereleases. Stable
-publication requires an explicit maintainer decision. Published bytes are immutable;
-corrections require a new version.
+Follow the [release procedure](docs/releases.md) for release PRs, exact local checks,
+artifact verification, draft uploads, publication and recovery. Builds and CI do not
+publish releases. Published bytes are immutable; corrections require a new version.
 
 Toolbelt downloads the prebuilt package and installs updates only after approval. It owns
 compatibility checks, startup probes, snapshots and rollback; this plugin owns schema and

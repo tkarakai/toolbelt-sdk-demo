@@ -98,3 +98,9 @@ cover node/field inventory, event behavior, row ordering, idempotent initializat
 both optional-capability branches. Use Toolbelt Plugin Tester for real rendering, mouse,
 keyboard, dialogs, themes, zoom, narrow layouts, assets and native quick view. Every
 scenario must remain safe with disposable resources.
+
+## Releases
+
+Follow the [release procedure](releases.md) for release PRs, validation, immutable assets,
+draft verification, publication and recovery. Local build/package scripts and CI do not
+publish releases.
