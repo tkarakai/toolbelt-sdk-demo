@@ -1,0 +1,10 @@
+.hutch/
+node_modules/
+build/
+dist/
+artifacts/
+*.tsbuildinfo
+.DS_Store
+*.tmp
+
+release-candidate/

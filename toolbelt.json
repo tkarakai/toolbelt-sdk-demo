@@ -1,0 +1,77 @@
+{
+  "formatVersion": 1,
+  "id": "sdk-demo",
+  "name": "SDK Explorer",
+  "description": "An interactive guide to every public Toolbelt UI and lifecycle capability. Safe to remove.",
+  "icon": "blocks",
+  "version": "0.0.1",
+  "protocol": 1,
+  "entry": "index.js",
+  "repo": "tkarakai/toolbelt-sdk-demo",
+  "requires": {
+    "host": ">=0.1.0",
+    "bun": ">=1.3.0",
+    "platforms": [
+      "darwin-arm64"
+    ]
+  },
+  "capabilities": {
+    "required": [
+      "ui.core",
+      "ui.action-key",
+      "ui.terminal",
+      "assets",
+      "lifecycle"
+    ],
+    "optional": [
+      "ui.conversation",
+      "native.handoff"
+    ]
+  },
+  "data": {
+    "schema": 1
+  },
+  "assets": {
+    "badge": "assets/badge.svg"
+  },
+  "screens": [
+    {
+      "id": "gallery",
+      "title": "Gallery",
+      "icon": "layout-grid",
+      "default": true,
+      "shortcut": "g"
+    },
+    {
+      "id": "table",
+      "title": "Tables",
+      "icon": "table",
+      "shortcut": "t"
+    },
+    {
+      "id": "forms",
+      "title": "Forms",
+      "icon": "sliders-horizontal",
+      "shortcut": "f"
+    },
+    {
+      "id": "output",
+      "title": "Output",
+      "icon": "terminal",
+      "shortcut": "o"
+    },
+    {
+      "id": "lifecycle",
+      "title": "Lifecycle",
+      "icon": "refresh-cw",
+      "shortcut": "l"
+    }
+  ],
+  "quickView": true,
+  "migration": {
+    "entry": "migrate.js"
+  },
+  "handoffActions": [
+    "handoff-count"
+  ]
+}

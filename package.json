@@ -1,0 +1,21 @@
+{
+  "name": "toolbelt-sdk-demo",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "bun test",
+    "build": "bun scripts/build.ts",
+    "package": "bun scripts/package.ts",
+    "release:plugin": "bun run --bun toolbelt-release plugin",
+    "release:plugin:retry": "bun run --bun toolbelt-release plugin:retry"
+  },
+  "dependencies": {
+    "@toolbelt/sdk": "https://github.com/tkarakai/toolbelt/releases/download/sdk-v0.2.0-dev.5/toolbelt-sdk-0.2.0-dev.5.tgz"
+  },
+  "devDependencies": {
+    "@types/bun": "1.4.4",
+    "typescript": "~5.9.3"
+  }
+}
