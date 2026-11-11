@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Non-interactive release PR preparation and verified CI publication through the shared SDK release tooling.
+
 - Add the removable SDK Explorer with all public UI nodes, field types, decorated tables,
   dialogs, quick view, packaged assets and lifecycle preparation examples.
 - Produce self-contained verified release packages and a machine-checked coverage inventory.

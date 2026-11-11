@@ -23,7 +23,7 @@ handoff counter is harmless: it counts an event rather than focusing an external
 
 ## Develop and verify
 
-Use Bun 1.4.2 and run from the repository root:
+Use Bun 1.4.4 and run from the repository root:
 
 ```sh
 bun install --frozen-lockfile
@@ -49,9 +49,7 @@ SVG asset, NOTICE and an opaque text payload. `bun run package` emits these file
 
 ## Publish and update
 
-Follow the [release procedure](docs/releases.md) for release PRs, exact local checks,
-artifact verification, draft uploads, publication and recovery. Builds and CI do not
-publish releases. Published bytes are immutable; corrections require a new version.
+Follow the [release procedure](docs/releases.md). Local builds create files only; merging a validated release PR authorizes CI publication. Published bytes are immutable; corrections require a new version.
 
 Toolbelt downloads the prebuilt package and installs updates only after approval. It owns
 compatibility checks, startup probes, snapshots and rollback; this plugin owns schema and

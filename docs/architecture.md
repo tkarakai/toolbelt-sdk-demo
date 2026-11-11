@@ -101,6 +101,4 @@ scenario must remain safe with disposable resources.
 
 ## Releases
 
-Follow the [release procedure](releases.md) for release PRs, validation, immutable assets,
-draft verification, publication and recovery. Local build/package scripts and CI do not
-publish releases.
+Follow the [release procedure](releases.md). Local builds create files only; merging a validated release PR authorizes CI publication. Published bytes are immutable; corrections require a new version.
