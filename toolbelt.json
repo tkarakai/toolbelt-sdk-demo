@@ -4,7 +4,7 @@
   "name": "SDK Explorer",
   "description": "An interactive guide to every public Toolbelt UI and lifecycle capability. Safe to remove.",
   "icon": "blocks",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "protocol": 1,
   "entry": "index.js",
   "repo": "tkarakai/toolbelt-sdk-demo",

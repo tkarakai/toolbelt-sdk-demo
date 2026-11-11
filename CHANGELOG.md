@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+## 0.1.0 — 2026-11-11
 - Non-interactive release PR preparation and verified CI publication through the shared SDK release tooling.
 
 - Add the removable SDK Explorer with all public UI nodes, field types, decorated tables,
