@@ -14,7 +14,7 @@ inventory synchronized with the pinned public SDK.
 | list | Gallery icons/hues and quick view: title/subtitle, metadata/time, dots, actions and empty content |
 | table columns | Tables: grow/minWidth, alignment, monospace, priority/optional visibility, sortable direction |
 | table cells | Tables: string/number/null, subtitle, tone, dot, strong text, tags, marks, chips, badge, sparkline, time and icon |
-| groups and nested rows | Tables: string/structured/nested groups, branch/tag/summary, muted/icon, expanded children |
+| groups and nested rows | Tables: string/structured/nested groups, branch/tag/summary (column-bound and trailing), muted/icon, expanded children |
 | inspector | Tables: sectioned details, copy controls, item actions/actionRow, statistics/trends and tones |
 | target chooser | Tables: one action with parent/child fixture targets |
 | row/bulk actions | Tables: inline/primary/disabled/group/key/destructive/confirmation patterns, row action subsets and selected rowIds |

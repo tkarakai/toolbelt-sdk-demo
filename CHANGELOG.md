@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Demonstrate column-bound group summaries alongside trailing nested-group summaries using SDK 0.3.1 (Toolbelt 0.2.2+).
+
 ## 0.1.0 — 2026-11-11
 - Non-interactive release PR preparation and verified CI publication through the shared SDK release tooling.
 
