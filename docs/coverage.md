@@ -22,7 +22,7 @@ inventory synchronized with the pinned public SDK.
 | text field | Forms: placeholder, description and fake sensitive value |
 | select/switch fields | Forms: options, value, description and toggles |
 | environment field | Forms: selected and secret entries with editable fixture keys/values |
-| segmented control | Forms: values and option icons, field event |
+| segmented control | Forms: values and option icons; Tables toolbar: accessible scope label, option hover/focus explanations and field events |
 | dialog | Toolbar: title/description/children, wide/resizable/maximize behavior, primary/cancel/close events |
 | log | Output: timestamps, tones, follow, empty state and bounded event history |
 | terminal | Output: ANSI fixture lines, append/follow/empty, text zoom and wrapping |
@@ -43,3 +43,6 @@ only optional support. The demo does not perform external terminal focus or real
 For a new SDK feature, add its manifest declaration if needed, a visible scenario, event
 handling/fallback and meaningful tests. Verify the extracted release archive and use the
 production Plugin Tester for layout, keyboard, appearance and quick-view behavior.
+
+Toolbar coverage requires the host/SDK release containing page controls. Pin that public
+SDK and update the minimum host range before merging/publishing this consumer change.
