@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+## 0.1.1 — 2026-11-12
 - Require Toolbelt 0.3.1 for explained toolbar controls and adopt source-pinned release retries with serialized publication.
 
 - Demonstrate segmented toolbar choices with accessible labels and option explanations.
