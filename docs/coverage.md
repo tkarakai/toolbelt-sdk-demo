@@ -44,5 +44,4 @@ For a new SDK feature, add its manifest declaration if needed, a visible scenari
 handling/fallback and meaningful tests. Verify the extracted release archive and use the
 production Plugin Tester for layout, keyboard, appearance and quick-view behavior.
 
-Toolbar coverage requires the host/SDK release containing page controls. Pin that public
-SDK and update the minimum host range before merging/publishing this consumer change.
+Toolbar controls require Toolbelt 0.3.1 or newer and the published SDK containing page controls.

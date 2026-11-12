@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Require Toolbelt 0.3.1 for explained toolbar controls and adopt source-pinned release retries with serialized publication.
+
 - Demonstrate segmented toolbar choices with accessible labels and option explanations.
 
 - Demonstrate column-bound group summaries alongside trailing nested-group summaries using SDK 0.3.1 (Toolbelt 0.2.2+).

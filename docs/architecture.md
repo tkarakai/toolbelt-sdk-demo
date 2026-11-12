@@ -102,3 +102,5 @@ scenario must remain safe with disposable resources.
 ## Releases
 
 Follow the [release procedure](releases.md). Local builds create files only; merging a validated release PR authorizes CI publication. Published bytes are immutable; corrections require a new version.
+
+Segmented toolbar controls require Toolbelt 0.3.1 or newer.
