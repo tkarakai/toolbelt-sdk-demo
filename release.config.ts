@@ -7,7 +7,7 @@ import {
 } from "@toolbelt/sdk/release";
 export default {
   repo: "tkarakai/toolbelt-sdk-demo",
-  hostVersion: "0.3.1",
+  hostVersion: "0.3.9",
   products: {
     plugin: {
       changelog: "CHANGELOG.md",
@@ -18,7 +18,7 @@ export default {
       },
       async build() {
         await run(["bun", "scripts/build.ts"]);
-        return packagePlugin("dist/package", "artifacts", "0.3.1", []);
+        return packagePlugin("dist/package", "artifacts", "0.3.9", []);
       },
     },
   },

@@ -22,6 +22,9 @@ inventory synchronized with the pinned public SDK.
 | text field | Forms: placeholder, description and fake sensitive value |
 | select/switch fields | Forms: options, value, description and toggles |
 | environment field | Forms: selected and secret entries with editable fixture keys/values |
+| rich fields (`ui.rich-fields`) | Forms: live-styled Markdown `textarea`, `datetime` with optional time, theme `color` swatches, freeform `combobox`, and `tags` pills with flag, lookup and freeform keys |
+| sections, unread, drag (`ui.row-reorder`, `ui.row-select`) | Tables: a queue fixture with declared sections (empty text, collapsed Done, fixed and refusing sections, drop labels), unread rows cleared by `select`, and `reorder` moves between sections |
+| modifier keys (`ui.modifier-keys`) | Tables queue: ⌥↑/⌥↓ move fixtures within a section and ⇧U marks one unread |
 | segmented control | Forms: values and option icons; Tables toolbar: accessible scope label, option hover/focus explanations and field events |
 | dialog | Toolbar: title/description/children, wide/resizable/maximize behavior, primary/cancel/close events |
 | log | Output: timestamps, tones, follow, empty state and bounded event history |
@@ -45,3 +48,5 @@ handling/fallback and meaningful tests. Verify the extracted release archive and
 production Plugin Tester for layout, keyboard, appearance and quick-view behavior.
 
 Toolbar controls require Toolbelt 0.3.1 or newer and the published SDK containing page controls.
+Rich fields, sections, unread rows, drag-to-reorder, select events and modifier keys require
+Toolbelt 0.3.9 or newer and SDK 0.3.5.

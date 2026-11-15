@@ -1,6 +1,7 @@
 # Changelog
 
 ## Unreleased
+- Demonstrate SDK 0.3.5: Markdown, date/time, color, combobox and tag-pill form fields, and a queue table with sections, unread rows cleared on selection, drag between sections and ⌥↑/⌥↓ moves. Requires Toolbelt 0.3.9.
 
 ## 0.1.1 — 2026-11-12
 - Require Toolbelt 0.3.1 for explained toolbar controls and adopt source-pinned release retries with serialized publication.

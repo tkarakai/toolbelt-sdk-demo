@@ -9,7 +9,7 @@
   "entry": "index.js",
   "repo": "tkarakai/toolbelt-sdk-demo",
   "requires": {
-    "host": ">=0.3.1",
+    "host": ">=0.3.9",
     "bun": ">=1.3.0",
     "platforms": [
       "darwin-arm64"
@@ -21,7 +21,11 @@
       "ui.action-key",
       "ui.terminal",
       "assets",
-      "lifecycle"
+      "lifecycle",
+      "ui.rich-fields",
+      "ui.row-select",
+      "ui.row-reorder",
+      "ui.modifier-keys"
     ],
     "optional": [
       "ui.conversation",
