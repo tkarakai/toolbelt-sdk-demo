@@ -1,6 +1,7 @@
 # Changelog
 
 ## Unreleased
+- Demonstrate the document table appearance (the queue fixture) and shaded tags: five intensity steps on queue rows and shaded Priority values in the tag-pill field. Toolbar keys (I, D) now work and show on their buttons. Uses the next SDK; older hosts show the usual table and pills.
 - Demonstrate SDK 0.3.5: Markdown, date/time, color, combobox and tag-pill form fields, and a queue table with sections, unread rows cleared on selection, drag between sections and ⌥↑/⌥↓ moves. Requires Toolbelt 0.3.9.
 
 ## 0.1.1 — 2026-11-12
