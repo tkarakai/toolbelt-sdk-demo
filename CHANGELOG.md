@@ -1,6 +1,8 @@
 # Changelog
 
 ## Unreleased
+
+## 0.2.0 — 2026-11-23
 - Demonstrate SDK 0.3.5: Markdown, date/time, color, combobox and tag-pill form fields, and a queue table with sections, unread rows cleared on selection, drag between sections and ⌥↑/⌥↓ moves. Requires Toolbelt 0.3.9.
 - Demonstrate SDK 0.3.11 on hosts that support it, with plain-text fallbacks elsewhere: an editable option list (rename in place, add, paste several, drag or ⌥↑ ⌥↓, remove, a color per item) on Forms, a Status tag key coloring each value, a rainbow dot in the Gallery's hues, and a notes timeline with an add-note composer and in-place editing on Output. Still runs on Toolbelt 0.3.9.
 
