@@ -25,6 +25,9 @@ inventory synchronized with the pinned public SDK.
 | rich fields (`ui.rich-fields`) | Forms: live-styled Markdown `textarea`, `datetime` with optional time, theme `color` swatches, freeform `combobox`, and `tags` pills with flag, lookup and freeform keys |
 | sections, unread, drag (`ui.row-reorder`, `ui.row-select`) | Tables: a queue fixture with declared sections (empty text, collapsed Done, fixed and refusing sections, drop labels), unread rows cleared by `select`, and `reorder` moves between sections |
 | modifier keys (`ui.modifier-keys`) | Tables queue: ⌥↑/⌥↓ move fixtures within a section and ⇧U marks one unread |
+| option list (`ui.options-field`) | Forms: an `options` field with colors, reorder and fixture counts; edits keep keys/counts, key new items and color them with `leastUsedHue`. Fallback: a plain-text list |
+| per-value tag colors, rainbow dots | Forms: a `tags` Status key with `TagKey.colors` and no `color` (rainbow key dot); Gallery hues: a `"rainbow"` dot with `ui.options-field` |
+| timeline, composer (`ui.timeline`, `ui.composer`) | Output: dated Markdown notes with delete (X) and in-place edit (E), and a composer that adds a note. Fallback: plain text |
 | segmented control | Forms: values and option icons; Tables toolbar: accessible scope label, option hover/focus explanations and field events |
 | dialog | Toolbar: title/description/children, wide/resizable/maximize behavior, primary/cancel/close events |
 | log | Output: timestamps, tones, follow, empty state and bounded event history |
@@ -39,6 +42,8 @@ inventory synchronized with the pinned public SDK.
 | optional native handoff | Lifecycle's declared counter action, supported-host behavior and safe fallback |
 
 The `ui.conversation` fallback uses plain text when negotiated support is absent.
+The option list, rainbow dot and notes fallbacks keep the demo working on Toolbelt 0.3.9: older
+hosts get a plain-text list, no rainbow entry and plain-text notes.
 The `native.handoff` fallback still counts the fixture event and explains the missing
 handoff support. Capability tests advertise every required manifest capability and vary
 only optional support. The demo does not perform external terminal focus or real updates.
@@ -49,4 +54,5 @@ production Plugin Tester for layout, keyboard, appearance and quick-view behavio
 
 Toolbar controls require Toolbelt 0.3.1 or newer and the published SDK containing page controls.
 Rich fields, sections, unread rows, drag-to-reorder, select events and modifier keys require
-Toolbelt 0.3.9 or newer and SDK 0.3.5.
+Toolbelt 0.3.9 or newer and SDK 0.3.5. The option list and rainbow dots need Toolbelt 0.3.16
+(SDK 0.3.11); the timeline and composer need a host advertising `ui.timeline` and `ui.composer`.
