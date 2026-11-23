@@ -29,7 +29,10 @@
     ],
     "optional": [
       "ui.conversation",
-      "native.handoff"
+      "native.handoff",
+      "ui.options-field",
+      "ui.timeline",
+      "ui.composer"
     ]
   },
   "data": {
