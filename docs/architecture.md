@@ -26,7 +26,7 @@ plugin's JavaScript; consumers install a ready-to-run package without dependency
 
 The archive root contains `toolbelt.json`, `index.js`, `migrate.js`, `NOTICE`, `assets/`
 and `payload/`. `toolbelt-release.json` identifies the exact source commit, target archive,
-size and SHA-256. Target compatibility is declared as `darwin-arm64`. Toolbelt validates
+size and SHA-256. Target compatibility is declared as `portable`: plain JavaScript, no macOS dependency. Toolbelt validates
 metadata and bytes, then starts code only after execution approval. Plugin code has the
 user's privileges; process/profile isolation is not a security sandbox.
 

@@ -1,6 +1,7 @@
 # Changelog
 
 ## Unreleased
+- SDK Explorer is now a portable plugin with no macOS dependency. Its icon examples use lucide icons instead of Finder icons.
 
 ## 0.2.0 — 2026-11-23
 - Demonstrate SDK 0.3.5: Markdown, date/time, color, combobox and tag-pill form fields, and a queue table with sections, unread rows cleared on selection, drag between sections and ⌥↑/⌥↓ moves. Requires Toolbelt 0.3.9.

@@ -33,7 +33,7 @@ inventory synchronized with the pinned public SDK.
 | log | Output: timestamps, tones, follow, empty state and bounded event history |
 | terminal | Output: ANSI fixture lines, append/follow/empty, text zoom and wrapping |
 | conversation | Output: all four roles, author/time/Markdown, expandable tool name/input/output, empty and optional fallback |
-| assets/icons | Gallery and Tables: lucide names, declared namespaced SVG and app/file Finder pathways |
+| assets/icons | Gallery and Tables: lucide names, declared namespaced SVG |
 | keyboard | Declared screen shortcuts, table P/T action keys and host navigation/menu/dialog patterns |
 | badge/toast/clipboard | Toolbar and Lifecycle: number/string/null badge, toast action/payload, undo and fixture copy |
 | lifecycle | Startup/ready, preparation defer/retry, shutdown persistence and schema-1 initialization |

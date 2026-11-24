@@ -25,7 +25,10 @@ if a draft/public release exists but exact files cannot be recovered, stop and u
 See the [shared release reference](https://github.com/tkarakai/toolbelt/blob/main/docs/releases.md)
 for permissions, authorization, artifact retention and failure recovery.
 
-The adapter bundles all scenarios, migration, assets and the harmless payload for darwin-arm64.
+The adapter bundles all scenarios, migration, assets and the harmless payload as one portable archive.
+CI and release jobs all run on Linux; no Mac runner is needed. The build runs
+`scripts/check-case.ts` on the tracked files and the archive folder, refusing paths that would be
+the same file on a Mac's case-insensitive disk.
 Plugin behavior tests remain here; shared archive/schema/lifecycle validation is supplied by the
 SDK development entry point and does not enter the plugin runtime bundle. Keep required host/Bun
 ranges and capabilities accurate. Update the exact public SDK URL and lockfile together when

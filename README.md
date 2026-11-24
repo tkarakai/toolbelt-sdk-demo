@@ -42,7 +42,7 @@ Use isolated tester profiles and disposable fixture data for visual and keyboard
 SVG asset, NOTICE and an opaque text payload. `bun run package` emits these files under
 `artifacts/`:
 
-- `toolbelt-sdk-demo-<version>-darwin-arm64.tar.gz`
+- `toolbelt-sdk-demo-<version>-portable.tar.gz`
 - the archive's `.sha256` file
 - `toolbelt-release.json`, binding repository, source commit, version, target, archive,
   byte size and SHA-256

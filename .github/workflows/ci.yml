@@ -78,8 +78,9 @@ jobs:
           advanced-security: false
 
   plugin:
+    # A portable plugin: typecheck, tests, the archive and its smoke check all run on Linux.
     name: Plugin
-    runs-on: macos-15
+    runs-on: ubuntu-latest
     timeout-minutes: 15
     permissions:
       contents: read

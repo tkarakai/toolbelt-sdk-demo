@@ -1,7 +1,7 @@
 const archive =
   "artifacts/toolbelt-sdk-demo-" +
   JSON.parse(await Bun.file("toolbelt.json").text()).version +
-  "-darwin-arm64.tar.gz";
+  "-portable.tar.gz";
 import { $ } from "bun";
 import { mkdtempSync, mkdirSync, rmSync } from "node:fs";
 import { join } from "node:path";
