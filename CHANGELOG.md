@@ -1,6 +1,8 @@
 # Changelog
 
 ## Unreleased
+
+## 0.2.1 — 2026-11-24
 - SDK Explorer is now a portable plugin with no macOS dependency. Its icon examples use lucide icons instead of Finder icons.
 
 ## 0.2.0 — 2026-11-23
