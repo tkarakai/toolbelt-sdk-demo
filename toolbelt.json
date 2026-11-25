@@ -80,5 +80,8 @@
   },
   "handoffActions": [
     "handoff-count"
-  ]
+  ],
+  "agent": {
+    "access": "read"
+  }
 }
