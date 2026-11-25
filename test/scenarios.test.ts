@@ -21,3 +21,4 @@ test('queue table: sections, unread until selected, drag between sections and mo
  event(s,'reorder',{table:'queue',rowId:'q1',section:'snoozed',before:null},c);expect(q().rows.find(r=>r.id==='q1')?.group).toBe('pinned');
  event(s,'queue-down',{rowId:'q3'},c);expect(q().rows.filter(r=>r.group==='working').map(r=>r.id)).toEqual(['q4','q3']);
  event(s,'reorder',{table:'queue',rowId:'q4',section:'done',before:null},c);expect(q().rows.find(r=>r.id==='q4')?.group).toBe('done');});
+test('the manifest declares agent access and Lifecycle shows it',async()=>{const manifest=await Bun.file(new URL('../toolbelt.json',import.meta.url)).json();expect(manifest.agent).toEqual({access:'read'});const tree=JSON.stringify(screen('lifecycle',initialState()));expect(tree).toContain('Agent access');expect(tree).toContain('agent.access');const forms=fields(initialState()).find(f=>f.type==='text'&&'sensitive'in f&&f.sensitive);expect(forms).toBeDefined();});

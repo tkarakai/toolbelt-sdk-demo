@@ -40,6 +40,7 @@ inventory synchronized with the pinned public SDK.
 | data/package/payload | Managed counter, immutable packageRoot, payload text resolution and declared asset |
 | main and quick surfaces | Five screens and a compact view sharing the same runtime/counter |
 | optional native handoff | Lifecycle's declared counter action, supported-host behavior and safe fallback |
+| agent access (manifest `agent.access`) | Manifest declares `read`; Lifecycle shows it. Agents can read every screen, and the Forms text field marked `sensitive` stays masked for them. Hosts without the agent interface ignore the key |
 
 The `ui.conversation` fallback uses plain text when negotiated support is absent.
 The option list, rainbow dot and notes fallbacks keep the demo working on Toolbelt 0.3.9: older

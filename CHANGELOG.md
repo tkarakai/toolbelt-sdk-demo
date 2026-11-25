@@ -1,6 +1,7 @@
 # Changelog
 
 ## Unreleased
+- Declare agent access (`agent.access: read`): on Toolbelt with the agent interface, AI agents may read SDK Explorer's screens, with the Forms token masked. Lifecycle shows the setting. Older Toolbelt ignores it.
 
 ## 0.2.1 — 2026-11-24
 - SDK Explorer is now a portable plugin with no macOS dependency. Its icon examples use lucide icons instead of Finder icons.
