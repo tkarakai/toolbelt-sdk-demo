@@ -1,20 +1,25 @@
-import {test,expect} from 'bun:test';import type {Node,Context} from '@toolbelt/sdk';
-import {COVERAGE,initialState,screen,quick,event,fields} from '../src/scenarios';
+import {test,expect} from 'bun:test';import {resolveView,type Node,type Context,type View} from '@toolbelt/sdk';
+import {COVERAGE,initialState,screen,quick,event,fields,type State} from '../src/scenarios';import {declarations,SCREENS} from '../src/views';
 process.env.TOOLBELT_PLUGIN='sdk-demo';process.env.TOOLBELT_PLUGIN_VERSION='0.0.1';
-const screens=['gallery','table','forms','output','lifecycle'];
-function nodes(tree:Node,types=new Set<string>()){types.add(tree.type);if('children'in tree)tree.children.forEach(n=>nodes(n,types));if(tree.type==='page'&&tree.dialog)tree.dialog.children.forEach(n=>nodes(n,types));return types;}
+const screens=[...SCREENS];const tableView=(s:State,state:Parameters<typeof resolveView>[1]):View=>resolveView(declarations(s)['screen:table'],state,'person');
+function nodes(tree:Node,types=new Set<string>()){types.add(tree.type);if('children'in tree)tree.children.forEach(n=>nodes(n,types));if(tree.type==='page'){tree.controls?.forEach(n=>nodes(n,types));if(tree.dialog)tree.dialog.children.forEach(n=>nodes(n,types));}return types;}
 test('every public SDK node has a rendered conformance scenario',()=>{const s=initialState(),seen=new Set<string>();s.hostCapabilities.push("ui.conversation","ui.timeline","ui.composer");for(const id of screens)nodes(screen(id,s),seen);nodes(quick(s),seen);expect([...seen].sort()).toEqual(Object.keys(COVERAGE).sort());});
 test('all field variants and required capabilities are present',()=>{expect(fields(initialState()).map(f=>f.type).sort()).toEqual(['color','combobox','datetime','environment','select','switch','tags','text','text','text','textarea']);const s=initialState();s.hostCapabilities.push('ui.options-field');expect(fields(s).map(f=>f.type)).toContain('options');});
-test('interaction routes table, field, dialog, clipboard, toast and badge events',()=>{const s=initialState(),messages:any[]=[];let invalidations=0;const c:Pick<Context,'invalidate'|'copy'|'badge'|'toast'>={invalidate(){invalidations++;},copy(text){messages.push(['copy',text]);},badge(v){messages.push(['badge',v]);},toast(...args){messages.push(['toast',...args]);}};
- event(s,'increment',{},c);expect(s.count).toBe(1);event(s,'field',{field:'name',value:'Grace'},c);expect(s.fields.name).toBe('Grace');
- event(s,'search',{query:'plain'},c);const t=screen('table',s);expect(t.type).toBe('page');if(t.type==='page'&&t.children[0]?.type==='table')expect(t.children[0].rows.map(r=>r.id)).toEqual(['plain']);
- event(s,'filter',{values:['parent']},c);expect(s.filter).toEqual(['parent']);event(s,'sort',{key:'value',desc:true},c);expect(s.sort).toEqual({key:'value',desc:true});
- event(s,'open-dialog',{},c);expect(s.dialog?.resizable).toBe(true);event(s,'dialog-close',{},c);expect(s.dialog).toBeUndefined();event(s,'defer',{},c);expect(s.defer).toBe(true);
- event(s,'copy',{},c);event(s,'toast',{},c);event(s,'clear-badge',{},c);event(s,'string-badge',{},c);expect(messages).toContainEqual(['copy','SDK Explorer fixture']);expect(messages).toContainEqual(['badge',null]);expect(messages).toContainEqual(['badge','demo']);expect(invalidations).toBeGreaterThan(10);
+test('interaction routes field, dialog, clipboard, toast and badge events',()=>{const s=initialState(),messages:any[]=[];let invalidations=0;const c:Pick<Context,'invalidate'|'copy'|'badge'|'toast'|'declareViews'>={invalidate(){invalidations++;},copy(text){messages.push(['copy',text]);},badge(v){messages.push(['badge',v]);},toast(...args){messages.push(['toast',...args]);},declareViews(){messages.push(['declareViews']);}};
+ event(s,'increment',{},c);expect(s.count).toBe(1);event(s,'field',{form:'preferences',field:'name',value:'Grace'},c);expect(s.fields.name).toBe('Grace');
+ event(s,'open-dialog',{},c);expect(s.dialogs.person?.resizable).toBe(true);event(s,'dialog-close',{},c);expect(s.dialogs.person).toBeUndefined();event(s,'defer',{},c);expect(s.defer).toBe(true);
+ event(s,'add-label',{},c);expect(s.labelKinds).toEqual(['area','size']);expect(messages).toContainEqual(['declareViews']);
+ event(s,'copy',{},c);event(s,'toast',{},c);event(s,'clear-badge',{},c);event(s,'string-badge',{},c);expect(messages).toContainEqual(['copy','SDK Explorer fixture']);expect(messages).toContainEqual(['badge',null]);expect(messages).toContainEqual(['badge','demo']);expect(invalidations).toBe(10);
 });
-test('table sort events produce reordered rows in both directions',()=>{const s=initialState();s.sort={key:'value',desc:false};let tree=screen('table',s);if(tree.type!=='page'||tree.children[0]?.type!=='table')throw Error('Missing table');expect(tree.children[0].rows.map(r=>r.id)).toEqual(['plain','parent']);s.sort.desc=true;tree=screen('table',s);if(tree.type!=='page'||tree.children[0]?.type!=='table')throw Error('Missing table');expect(tree.children[0].rows.map(r=>r.id)).toEqual(['parent','plain']);});
+test('the Tables screen renders its search, filter and sort from the view',()=>{const s=initialState();const ids=(view:View)=>{const t=screen('table',s,view);if(t.type!=='page'||t.children[0]?.type!=='table')throw Error('Missing table');return t.children[0].rows.map(r=>r.id);};
+ expect(ids(tableView(s,{}))).toEqual(['parent','plain']);
+ expect(ids(tableView(s,{search:'plain'}))).toEqual(['plain']);
+ expect(ids(tableView(s,{filters:{fixtures:['parent']}}))).toEqual(['parent']);
+ const t=screen('table',s,tableView(s,{search:'plain',filters:{fixtures:['plain']}}));if(t.type!=='page')throw Error('Missing page');
+ expect(t.highlight).toEqual(['plain']);expect(t.filters?.[0]?.selected).toEqual(['plain']);});
+test('table sort comes from the view and reorders rows in both directions',()=>{const s=initialState();for(const desc of [false,true]){const tree=screen('table',s,tableView(s,{sort:{'capability-table':{key:'value',desc}}}));if(tree.type!=='page'||tree.children[0]?.type!=='table')throw Error('Missing table');expect(tree.children[0].sort).toEqual({key:'value',desc});expect(tree.children[0].rows.map(r=>r.id)).toEqual(desc?['parent','plain']:['plain','parent']);}});
 
-test('queue table: sections, unread until selected, drag between sections and modifier-key moves',()=>{const s=initialState();const c={invalidate(){},copy(){},badge(){},toast(){}};const q=()=>{const t=screen('table',s);if(t.type!=='page'||t.children[1]?.type!=='table')throw Error('Missing queue');return t.children[1];};
+test('queue table: sections, unread until selected, drag between sections and modifier-key moves',()=>{const s=initialState();const c={invalidate(){},copy(){},badge(){},toast(){},declareViews(){}};const q=()=>{const t=screen('table',s);if(t.type!=='page'||t.children[1]?.type!=='table')throw Error('Missing queue');return t.children[1];};
  expect(q()).toMatchObject({reorder:true,selectEvents:true});expect(q().sections?.map(x=>x.id)).toEqual(['pinned','inbox','working','snoozed','done']);expect(q().actions?.map(a=>a.key)).toEqual(['alt+up','alt+down','shift+u']);
  expect(q().rows.find(r=>r.id==='q2')?.unread).toBe(true);event(s,'select',{table:'queue',rowId:'q2'},c);expect(q().rows.find(r=>r.id==='q2')?.unread).toBeUndefined();
  event(s,'reorder',{table:'queue',rowId:'q3',section:'working',before:'q4'},c);expect(q().rows.filter(r=>r.group==='working').map(r=>r.id)).toEqual(['q3','q4']);
