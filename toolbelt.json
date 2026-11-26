@@ -5,11 +5,11 @@
   "description": "An interactive guide to every public Toolbelt UI and lifecycle capability. Safe to remove.",
   "icon": "blocks",
   "version": "0.2.1",
-  "protocol": 1,
+  "protocol": 2,
   "entry": "index.js",
   "repo": "tkarakai/toolbelt-sdk-demo",
   "requires": {
-    "host": ">=0.3.9",
+    "host": ">=0.6.0",
     "bun": ">=1.3.0",
     "platforms": [
       "portable"
@@ -25,7 +25,9 @@
       "ui.rich-fields",
       "ui.row-select",
       "ui.row-reorder",
-      "ui.modifier-keys"
+      "ui.modifier-keys",
+      "ui.filter-group",
+      "ui.choice-control"
     ],
     "optional": [
       "ui.conversation",
@@ -54,6 +56,12 @@
       "title": "Tables",
       "icon": "table",
       "shortcut": "t"
+    },
+    {
+      "id": "views",
+      "title": "Views",
+      "icon": "list-filter",
+      "shortcut": "v"
     },
     {
       "id": "forms",

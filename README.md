@@ -12,10 +12,15 @@ approve execution. Enable prereleases when selecting a prerelease. You can also 
 built archive in Toolbelt Plugin Tester. Toolbelt can include this same prebuilt package
 as its removable seed; the host preserves disable/removal choices across app upgrades.
 
-The Gallery, Tables, Forms, Output and Lifecycle tabs have `g`, `t`, `f`, `o` and `l`
-shortcuts, respectively. A menu-bar quick view shares the same counter and runtime.
+The Gallery, Tables, Views, Forms, Output and Lifecycle tabs have `g`, `t`, `v`, `f`, `o` and
+`l` shortcuts, respectively. SDK Explorer needs ToolBelt 0.6.0 or newer (plugin protocol 2). A menu-bar quick view shares the same counter and runtime.
 Use host settings and controls for themes, zoom, resizing, keyboard navigation and reduced
 motion. [Coverage](docs/coverage.md) maps public SDK features to their scenarios.
+
+Every search, filter, sort and toolbar control is a *view* that the SDK keeps and ToolBelt
+saves. The Views tab shows the instance it is drawn for (`person` for every person's screen,
+`agent:…` for an AI agent's own view) and the whole view. Its label filters come from data:
+adding or removing one declares the views again.
 
 Lifecycle's Defer switch simulates an unsafe operation. Preparation reports a reason until
 you turn it off, allowing authors to inspect the host's deferred-upgrade behavior. The

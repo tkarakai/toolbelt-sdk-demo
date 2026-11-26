@@ -1,6 +1,8 @@
 # Changelog
 
 ## Unreleased
+- Requires ToolBelt 0.6.0: SDK Explorer speaks plugin protocol 2 with SDK 0.4.0. Searches, filters, sorts and toolbar controls are now views kept by the SDK and saved by ToolBelt, so the person's choices come back after a restart, and AI agents read through views of their own that never change what you see. Dialogs show only for whoever opened them.
+- Add a Views tab (`v`) that shows which view each screen is drawn for (yours or an agent's) and everything in it. It has a search, a Status filter that starts at Ongoing, filters that group the table (drag them, or use Group by, up to two levels), a sortable table with a starting sort and a Due choice control. Add label filter and Remove label filter change the declared filters, which demonstrates view controls that come from data.
 - Declare agent access (`agent.access: read`): on Toolbelt with the agent interface, AI agents may read SDK Explorer's screens, with the Forms token masked. Lifecycle shows the setting. Older Toolbelt ignores it.
 
 ## 0.2.1 — 2026-11-24
