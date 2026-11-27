@@ -1,6 +1,8 @@
 # Changelog
 
 ## Unreleased
+
+## 0.4.0 — 2026-11-27
 - Requires ToolBelt 0.7.1 (SDK 0.5.1). Add a floating window (⌘J, or its item at the bottom of the sidebar): an ask bar with recent chats under Continue (with when they were used) and things to try, which grows into a panel with canned answers, a form, a long list, and simulated work that spins the sidebar item while the window is minimized and leaves a dot when done. Nothing is sent anywhere.
 
 ## 0.3.0 — 2026-11-26
