@@ -31,7 +31,7 @@ async function started(state:State=initialState()){
 }
 
 test('the manifest speaks protocol 2 and every screen has a declared view',async()=>{
- expect(manifest.protocol).toBe(2);expect(manifest.agent.access).toBe('read');expect(manifest.requires.host).toBe('>=0.6.0');
+ expect(manifest.protocol).toBe(2);expect(manifest.agent.access).toBe('read');expect(manifest.requires.host).toBe('>=0.7.1');
  expect(manifest.screens.map((s:{id:string})=>s.id)).toEqual([...SCREENS]);
  const {host}=await started();
  try{

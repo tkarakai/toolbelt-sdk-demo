@@ -41,8 +41,9 @@ negotiated host capabilities and loads the text fixture through `payload()`. Pac
 and payload information are shown by the Lifecycle scenario.
 
 Render functions cover `screen:gallery`, `screen:table`, `screen:views`, `screen:forms`,
-`screen:output`, `screen:lifecycle` and `quick`. Event handlers update fixture state and
-invalidate open surfaces. The event log retains up to 50 entries, including `onView` changes.
+`screen:output`, `screen:lifecycle`, `quick` and `floating`. Event handlers update fixture state and
+invalidate open surfaces. `src/floating.ts` owns the floating window: its tree, its events (routed
+by surface in `src/plugin.ts`) and its in-memory state; its busy flag is a timer. The event log retains up to 50 entries, including `onView` changes.
 Forms, dialogs, label kinds, output and deferral are in-memory fixtures; only the counter is
 persisted. Every event and shutdown writes the counter.
 
@@ -118,7 +119,8 @@ Use this authoring pattern:
    descriptor/checksums, then execute the extracted package without a source checkout.
 
 Run typecheck, unit tests and clean-archive verification after changes. The archive check
-speaks protocol 2. It opens all six screens and the quick view for `person` and the Views
+speaks protocol 2. It opens all six screens, the quick view and the floating window (asking from its bar must
+grow it into a panel) for `person` and the Views
 screen for an agent instance, and checks the declarations in hello, an agent's SDK-applied
 search, a redeclaration, preparation deferral/retry and shutdown. `test/views.test.ts` drives the real
 definition through the SDK's `fakeHost`. Unit tests
@@ -131,4 +133,4 @@ scenario must remain safe with disposable resources.
 
 Follow the [release procedure](releases.md). Local builds create files only; merging a validated release PR authorizes CI publication. Published bytes are immutable; corrections require a new version.
 
-SDK Explorer requires Toolbelt 0.6.0 or newer (plugin protocol 2, SDK 0.4.0).
+SDK Explorer requires Toolbelt 0.7.1 or newer (plugin protocol 2, `ui.floating`, SDK 0.5.1).

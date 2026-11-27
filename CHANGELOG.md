@@ -1,6 +1,7 @@
 # Changelog
 
 ## Unreleased
+- Requires ToolBelt 0.7.1 (SDK 0.5.1). Add a floating window (⌘J, or its item at the bottom of the sidebar): an ask bar with recent chats under Continue (with when they were used) and things to try, which grows into a panel with canned answers, a form, a long list, and simulated work that spins the sidebar item while the window is minimized and leaves a dot when done. Nothing is sent anywhere.
 
 ## 0.3.0 — 2026-11-26
 - Requires ToolBelt 0.6.0: SDK Explorer speaks plugin protocol 2 with SDK 0.4.0. Searches, filters, sorts and toolbar controls are now views kept by the SDK and saved by ToolBelt, so the person's choices come back after a restart, and AI agents read through views of their own that never change what you see. Dialogs show only for whoever opened them.

@@ -13,7 +13,9 @@ built archive in Toolbelt Plugin Tester. Toolbelt can include this same prebuilt
 as its removable seed; the host preserves disable/removal choices across app upgrades.
 
 The Gallery, Tables, Views, Forms, Output and Lifecycle tabs have `g`, `t`, `v`, `f`, `o` and
-`l` shortcuts, respectively. SDK Explorer needs ToolBelt 0.6.0 or newer (plugin protocol 2). A menu-bar quick view shares the same counter and runtime.
+`l` shortcuts, respectively. ⌘J opens its floating window: an ask bar that grows into a panel
+over any screen, with canned answers. SDK Explorer needs ToolBelt 0.7.1 or newer (plugin
+protocol 2, floating windows). A menu-bar quick view shares the same counter and runtime.
 Use host settings and controls for themes, zoom, resizing, keyboard navigation and reduced
 motion. [Coverage](docs/coverage.md) maps public SDK features to their scenarios.
 
