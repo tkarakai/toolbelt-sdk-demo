@@ -9,7 +9,7 @@
   "entry": "index.js",
   "repo": "tkarakai/toolbelt-sdk-demo",
   "requires": {
-    "host": ">=0.6.0",
+    "host": ">=0.7.1",
     "bun": ">=1.3.0",
     "platforms": [
       "portable"
@@ -27,7 +27,8 @@
       "ui.row-reorder",
       "ui.modifier-keys",
       "ui.filter-group",
-      "ui.choice-control"
+      "ui.choice-control",
+      "ui.floating"
     ],
     "optional": [
       "ui.conversation",
@@ -83,6 +84,9 @@
     }
   ],
   "quickView": true,
+  "floating": {
+    "shortcut": "j"
+  },
   "migration": {
     "entry": "migrate.js"
   },

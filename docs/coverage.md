@@ -37,6 +37,7 @@ inventory synchronized with the pinned public SDK.
 | log | Output: timestamps, tones, follow, empty state and bounded event history |
 | terminal | Output: ANSI fixture lines, append/follow/empty, text zoom and wrapping |
 | conversation | Output: all four roles, author/time/Markdown, expandable tool name/input/output, empty and optional fallback |
+| floating window (`ui.floating`) | ⌘J or its sidebar item: a `bar` with `suggestions` grouped Continue (`metaAt`) and Try (`meta`), whose composer asks; a `panel` with `subtitle` and icon `actions`, a conversation with a pinned composer, a form (stacked labels, page scroll), a 40-row list, and `busy` (a 3 s timer: sidebar spinner, then a dot). Required: the manifest's `floating` needs it |
 | assets/icons | Gallery and Tables: lucide names, declared namespaced SVG |
 | keyboard | Declared screen shortcuts, table P/T action keys and host navigation/menu/dialog patterns |
 | badge/toast/clipboard | Toolbar and Lifecycle: number/string/null badge, toast action/payload, undo and fixture copy |

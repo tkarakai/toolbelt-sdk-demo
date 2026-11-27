@@ -37,7 +37,7 @@ try {
     type: "hello",
     protocol: 2,
     plugin: { id: m.id },
-    host: { name: "Clean package check", version: "0.6.0" },
+    host: { name: "Clean package check", version: "0.7.1" },
   });
   let buffer = "",
     ready = false,
@@ -45,8 +45,9 @@ try {
     prepared = false,
     declared = false,
     redeclared = false,
-    agentView = false;
-  const surfaces = m.screens.length + 1;
+    agentView = false,
+    floatingPanel = false;
+  const surfaces = m.screens.length + 2;
   const rendered = new Set<string>();
   const agent = "agent:package-check";
   for await (const bytes of proc.stdout) {
@@ -65,16 +66,21 @@ try {
         for (const s of m.screens)
           send({ type: "open", surface: `screen:${s.id}`, instance: "person" });
         send({ type: "open", surface: "quick", instance: "person" });
+        send({ type: "open", surface: "floating", instance: "person" });
         send({ type: "open", surface: "screen:views", instance: agent });
       }
       if (msg.type === "render") {
         if (msg.instance === "person") rendered.add(msg.surface);
+        // Asking from the bar grows it into a panel with the answer.
+        if (msg.surface === "floating" && msg.tree.mode === "panel" && JSON.stringify(msg.tree).includes("A canned answer"))
+          floatingPanel = true;
         if (rendered.size === surfaces && !deferred) {
           deferred = true;
           // An agent's search is applied by the SDK to its own instance only.
           send({ type: "event", surface: "screen:views", instance: agent, name: "search", payload: { query: "guide" } });
           // A label filter changes the declaration: the SDK sends it again.
           send({ type: "event", surface: "screen:views", instance: "person", name: "add-label" });
+          send({ type: "event", surface: "floating", instance: "person", name: "floating-ask", payload: { composer: "floating-ask", text: "Hello" } });
           send({ type: "event", surface: "screen:lifecycle", instance: "person", name: "defer" });
           send({ type: "prepare", requestId: "blocked", reason: "upgrade" });
         }
@@ -103,11 +109,12 @@ try {
     rendered.size !== surfaces ||
     !declared ||
     !redeclared ||
-    !agentView
+    !agentView ||
+    !floatingPanel
   )
     throw Error("Demo clean package contract failed");
   console.log(
-    "Clean demo package: protocol 2 views, an agent instance, redeclaration, all screens/quick, prepare deferral/retry, shutdown pass.",
+    "Clean demo package: protocol 2 views, an agent instance, redeclaration, all screens/quick/floating (bar to panel), prepare deferral/retry, shutdown pass.",
   );
 } finally {
   rmSync(root, { recursive: true, force: true });
