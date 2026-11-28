@@ -10,7 +10,9 @@ installation, process lifecycle, rendering and native surfaces.
 | Path | Responsibility |
 | --- | --- |
 | `src/index.ts` | Entry point: runs the definition over the SDK transport |
-| `src/plugin.ts` | SDK definition: view declarations, startup/readiness, persistence, preparation and shutdown |
+| `src/plugin.ts` | SDK definition: declarations, startup/readiness, persistence, preparation, shutdown, per-instance hooks and event results |
+| `src/declarations.ts` | Every action id and form with its effect (protocol 3) |
+| `src/actions.ts` | The Actions screen: effects, forms, results, the events and instances panels, and their fixture items |
 | `src/views.ts` | View declarations (from data), the Views screen and its fixture tasks |
 | `src/scenarios.ts` | Scenario trees, fixture state, event handling and exhaustive node map |
 | `src/migrate.ts` | Retry-safe schema-1 data initialization |
@@ -34,18 +36,19 @@ user's privileges; process/profile isolation is not a security sandbox.
 
 ## Runtime and data
 
-The SDK performs the protocol 2 handshake, sending the view declarations, and reports
-readiness after `start` completes.
-Startup creates the managed data directory, reads the counter from `demo.json`, obtains
+The SDK performs the protocol 3 handshake, sending the declarations (views, actions and forms),
+sends them again after `start` if they changed, and reports readiness.
+Startup creates the managed data directory, reads the counter and the saved label kinds from
+`demo.json`, obtains
 negotiated host capabilities and loads the text fixture through `payload()`. Package-root
 and payload information are shown by the Lifecycle scenario.
 
-Render functions cover `screen:gallery`, `screen:table`, `screen:views`, `screen:forms`,
+Render functions cover `screen:gallery`, `screen:table`, `screen:views`, `screen:actions`, `screen:forms`,
 `screen:output`, `screen:lifecycle`, `quick` and `floating`. Event handlers update fixture state and
 invalidate open surfaces. `src/floating.ts` owns the floating window: its tree, its events (routed
 by surface in `src/plugin.ts`) and its in-memory state; its busy flag is a timer. The event log retains up to 50 entries, including `onView` changes.
-Forms, dialogs, label kinds, output and deferral are in-memory fixtures; only the counter is
-persisted. Every event and shutdown writes the counter.
+Forms, dialogs, fixture items, output and deferral are in-memory fixtures; the counter and the
+label kinds are persisted. Every event and shutdown writes them.
 
 ## Views and instances
 
@@ -62,11 +65,31 @@ count from plugin start, so an unchanged tree is identical and the SDK doesn't r
 other instances.
 
 `views` is a function of the label kinds. Add label filter and Remove label filter change
-them and call `ctx.declareViews()`. The SDK sends the new declarations and drops each
+them and call `ctx.declare()`. The SDK sends the new declarations and drops each
 instance's state for removed filters. A saved arrangement can still name a removed filter,
 or lack a new one, so `arrangement()` drops unknown ids, appends new ones and keeps at most
-two grouping levels. The function is read at the handshake, before `start`, so its data must
-be ready without startup I/O.
+two grouping levels. The function is read at the handshake, before `start`, and again after
+`start` has loaded the saved label kinds: the SDK sends the declarations again by itself, before
+`ready`, so the plugin calls `declare()` only when they change later.
+
+The Views declaration lists the values its filters and Due control allow (`options`): the SDK
+refuses an agent's view outside them and drops them from the person's saved view. Lock view makes
+`onView` return `false` for that screen, so every change is refused and reported to the host.
+
+## Actions, results and instances
+
+`src/declarations.ts` declares every action id the trees and toasts use, with its effect, and every
+form (including the Forms body's segmented control, which isn't a view control). ToolBelt refuses a
+render that uses anything undeclared, journals `write`, `external` and `destructive` events, and
+asks the person before an agent's change. The manifest's `agent.access` is `act`: every effect is
+harmless, and Open the SDK guide only says what it would open.
+
+`onEvent` returns each event's result: nothing, `false` (not handled) or `{ data }` (new item ids,
+the guide's address); a thrown error is the result's error. The plugin records each event's id,
+surface, instance, origin (with the agent's client name) and outcome for the Actions tab, newest
+first, at most eight. Agents' events are handled as the person's. `onOpen`/`onClose` fire for every
+instance; the Instances card lists them, and a closed Actions copy drops its draft and tip. Drafts
+(the New item dialog) and the tip are kept per instance, items per plugin.
 
 Preparation normally returns ready. The Defer switch makes it return `ready: false` with
 a readable reason, demonstrating a safe retry boundary without external work. Shutdown
@@ -81,7 +104,8 @@ or services outside that directory. Same-schema package updates are an explicit 
 ## Capability negotiation
 
 Required capabilities are `ui.core`, `ui.action-key`, `ui.terminal`, `assets`,
-`lifecycle`, the SDK 0.3.5 interaction capabilities, `ui.filter-group` and `ui.choice-control`.
+`lifecycle`, the SDK 0.3.5 interaction capabilities, `ui.filter-group`, `ui.choice-control`,
+`ui.floating`, `ui.split-action`, `navigate` and `ui.row-pane`.
 The last two draw the Views tab's grouping filters, `Filter.default` and the Due choice. Unknown/missing required support must reject activation before disturbing
 an installed compatible package.
 
@@ -119,13 +143,14 @@ Use this authoring pattern:
    descriptor/checksums, then execute the extracted package without a source checkout.
 
 Run typecheck, unit tests and clean-archive verification after changes. The archive check
-speaks protocol 2. It opens all six screens, the quick view and the floating window (asking from its bar must
+speaks protocol 3. It opens all seven screens, the quick view and the floating window (asking from its bar must
 grow it into a panel) for `person` and the Views
-screen for an agent instance, and checks the declarations in hello, an agent's SDK-applied
-search, a redeclaration, preparation deferral/retry and shutdown. `test/views.test.ts` drives the real
-definition through the SDK's `fakeHost`. Unit tests
+screen for an agent instance, and checks the declarations in hello, a result for every event, an agent's write returning data,
+navigation tagged with its event, an agent's SDK-applied search, a redeclaration, preparation
+deferral/retry and shutdown. `test/views.test.ts` and `test/actions.test.ts` drive the real
+definition through the SDK's `fakeHost` (`test/host.ts`), which rejects undeclared ids as ToolBelt does. Unit tests
 cover node/field inventory, event behavior, row ordering, idempotent initialization and
-both optional-capability branches. Use Toolbelt Plugin Tester for real rendering, mouse,
+both optional-capability branches. Use ToolBelt's plugin development mode for real rendering, mouse,
 keyboard, dialogs, themes, zoom, narrow layouts, assets and native quick view. Every
 scenario must remain safe with disposable resources.
 
@@ -133,4 +158,4 @@ scenario must remain safe with disposable resources.
 
 Follow the [release procedure](releases.md). Local builds create files only; merging a validated release PR authorizes CI publication. Published bytes are immutable; corrections require a new version.
 
-SDK Explorer requires Toolbelt 0.7.1 or newer (plugin protocol 2, `ui.floating`, SDK 0.5.1).
+SDK Explorer requires ToolBelt 0.10.0 or newer (plugin protocol 3, SDK 0.7.0).

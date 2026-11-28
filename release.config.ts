@@ -7,7 +7,6 @@ import {
 } from "@toolbelt/sdk/release";
 export default {
   repo: "tkarakai/toolbelt-sdk-demo",
-  hostVersion: "0.7.1",
   products: {
     plugin: {
       changelog: "CHANGELOG.md",
@@ -20,7 +19,8 @@ export default {
         await run(["bun", "scripts/build.ts"]);
         // Built on Linux, installed on Macs: refuse names that differ only by letter case.
         await run(["bun", "scripts/check-case.ts", "--git", "dist/package"]);
-        return packagePlugin("dist/package", "artifacts", "0.7.1", []);
+        // The SDK probes the package as the ToolBelt it matches (HOST_VERSION).
+        return packagePlugin("dist/package", "artifacts");
       },
     },
   },

@@ -9,20 +9,29 @@ update software, control user processes or change dotfiles.
 
 In Toolbelt Settings → Plugins, enter `tkarakai/toolbelt-sdk-demo`, select a release and
 approve execution. Enable prereleases when selecting a prerelease. You can also open the
-built archive in Toolbelt Plugin Tester. Toolbelt can include this same prebuilt package
+built archive in ToolBelt's plugin development mode. Toolbelt can include this same prebuilt package
 as its removable seed; the host preserves disable/removal choices across app upgrades.
 
-The Gallery, Tables, Views, Forms, Output and Lifecycle tabs have `g`, `t`, `v`, `f`, `o` and
-`l` shortcuts, respectively. ⌘J opens its floating window: an ask bar that grows into a panel
-over any screen, with canned answers. SDK Explorer needs ToolBelt 0.7.1 or newer (plugin
-protocol 2, floating windows). A menu-bar quick view shares the same counter and runtime.
+The Gallery, Tables, Views, Actions, Forms, Output and Lifecycle tabs have `g`, `t`, `v`, `a`,
+`f`, `o` and `l` shortcuts, respectively. ⌘J opens its floating window: an ask bar that grows into a panel
+over any screen, with canned answers. SDK Explorer needs ToolBelt 0.10.0 or newer (plugin
+protocol 3). A menu-bar quick view shares the same counter and runtime.
 Use host settings and controls for themes, zoom, resizing, keyboard navigation and reduced
 motion. [Coverage](docs/coverage.md) maps public SDK features to their scenarios.
 
 Every search, filter, sort and toolbar control is a *view* that the SDK keeps and ToolBelt
 saves. The Views tab shows the instance it is drawn for (`person` for every person's screen,
 `agent:…` for an AI agent's own view) and the whole view. Its label filters come from data:
-adding or removing one declares the views again.
+adding or removing one declares the views again, and the ones you add are saved. Lock view makes the
+plugin refuse every view change on that tab.
+
+Every action and form is declared with what it does (`view`, `write`, `external` or
+`destructive`), and AI agents may act on SDK Explorer (`agent.access: act`) in copies of their own,
+with ToolBelt asking you before changes. The Actions tab has one action of every effect, a draft
+dialog and rows edited in the drawer, and shows each event's id, origin (you or an agent),
+instance and outcome, and every open instance. Nothing an agent can do here reaches outside the
+plugin: its data is in-memory fixtures and the counter, and Open the SDK guide only says which
+page it would open.
 
 Lifecycle's Defer switch simulates an unsafe operation. Preparation reports a reason until
 you turn it off, allowing authors to inspect the host's deferred-upgrade behavior. The
@@ -60,7 +69,8 @@ Follow the [release procedure](docs/releases.md). Local builds create files only
 
 Toolbelt downloads the prebuilt package and installs updates only after approval. It owns
 compatibility checks, startup probes, snapshots and rollback; this plugin owns schema and
-migration behavior. Schema 1 persists only a counter in its managed data directory.
+migration behavior. Schema 1 persists a counter and the Views tab's label filters in its managed
+data directory.
 
 When updating the SDK, pin the public asset URL, confirm the lockfile resolves that URL,
 then update scenarios, coverage and tests for the changed API. Required capabilities must

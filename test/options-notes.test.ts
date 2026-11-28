@@ -1,6 +1,6 @@
 import {test,expect} from 'bun:test';import type {Context} from '@toolbelt/sdk';import {validateTree} from '@toolbelt/sdk/validation';
 import {initialState,screen,event,optionsField,type State} from '../src/scenarios';
-const c:Pick<Context,'invalidate'|'copy'|'badge'|'toast'|'declareViews'>={invalidate(){},copy(){},badge(){},toast(){},declareViews(){}};
+const c:Pick<Context,'invalidate'|'copy'|'badge'|'toast'|'declare'|'navigate'>={invalidate(){},copy(){},badge(){},toast(){},declare(){},navigate(){return true;}};
 const withCaps=(...caps:string[])=>{const s=initialState();s.hostCapabilities.push(...caps);return s;};
 const json=(s:State,id:string)=>JSON.stringify(screen(id,s));
 

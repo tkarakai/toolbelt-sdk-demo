@@ -19,9 +19,22 @@ inventory synchronized with the pinned public SDK.
 | target chooser | Tables: one action with parent/child fixture targets |
 | row/bulk actions | Tables: inline/primary/disabled/group/key/destructive/confirmation patterns, row action subsets and selected rowIds |
 | search/filter/sort | Tables: selected filters/counts/dots, highlights and actual filtered/sorted fixture rows, all from the SDK-owned view |
-| views (protocol 2) | Views: declared search, a multi-select Status filter whose declared start matches `Filter.default` (Ongoing), a sortable table with a declared sort, the Due `choice` control and filters arranged with `filter-arrange` that group rows (`group`, `groupDisabled` at two levels). The page shows `view.instance` and the whole view. `onView` logs changes. Dialogs are kept per instance |
-| views from data (`declareViews`) | Views: each active label kind is a declared filter. Add/Remove label filter call `ctx.declareViews()`; saved arrangements tolerate ids that came or went |
+| views | Views: declared search, a multi-select Status filter whose declared start matches `Filter.default` (Ongoing), a sortable table with a declared sort, the Due `choice` control and filters arranged with `filter-arrange` that group rows (`group`, `groupDisabled` at two levels). The page shows `view.instance` and the whole view. `onView` logs changes. Dialogs are kept per instance |
+| allowed values (`options`) | Views: Status and label filters and the Due control declare the values they take. An agent's view outside them is refused; a saved view loses them |
+| refused views | Views: Lock view makes `onView` return `false` for every change there; the instance keeps its view, the host gets `refused`, and the card lists the refusals |
+| sort in a card, clearing a sort | Actions: the fixture items table sits in a card with a declared sort the SDK fills; `sort` with `key: null` (agents, the host) shows items in the order they were added |
+| views from data (`declare`) | Views: each active label kind is a declared filter. Add/Remove label filter call `ctx.declare()`; saved arrangements tolerate ids that came or went |
+| declarations from data loaded in `start` | Views: label kinds are saved with the counter; `start` loads them and the SDK sends the new declarations before `ready` without a `declare()` call |
 | instances | Every screen renders per instance. Tests open `person` and `agent:…` instances and check that an agent's view never changes the person's tree |
+| per-instance hooks | Actions: `onOpen`/`onClose` fire for every instance of every surface; the Instances card lists them with their origin and counts opens and closes. A closed Actions copy takes its draft with it |
+| action and form declarations (protocol 3) | `src/declarations.ts` declares every action id the trees and toasts use, with its effect (`describe` where the label isn't enough), and every form, including the Forms body's segmented control. Tests check that the fake host rejects nothing and that every declared id is used |
+| effects | Actions: Show tip (`view`, this instance only), Add item (`write`), Open the SDK guide (`external` with `confirm`, says what it would open), Clear items (`destructive` with `confirm`) and Restore samples (`write`, `agent: false`) |
+| forms | Actions: New item… opens a per-instance dialog with a draft form (`item-draft`, `view`) saved by Save (`write`); each item's row pane has an inline form (`item-pane`, `write`) that saves each field |
+| results | Actions: Add item, Add three, Save, Open the SDK guide and bulk Mark done return `data`; Fail on purpose throws (the result's `error`); Decline returns `false` (not handled). The Results card shows the last event's id, surface, origin (with the agent's name), instance and outcome, and the last eight events |
+| tags and navigation | Toasts, clipboard text and navigation sent while handling carry the event's id; Show on Views calls `ctx.navigate('views', {select: 't2'})` |
+| split button (`ui.split-action`) | Actions: Add item ▾ Add three / New item… on a card; Copy title ▾ Copy id on rows |
+| action `input` (`ui.composer`) | Actions: a row's Rename… asks for the new title (without `ui.composer` it isn't offered: the drawer's title renames) |
+| row pane (`ui.row-pane`) | Actions: each fixture item edits in the drawer with an inline form whose title is a heading |
 | choice control (`ui.choice-control`) | Views toolbar: Due with sections and descriptions, applied by the SDK as a page control |
 | text field | Forms: placeholder, description and fake sensitive value |
 | select/switch fields | Forms: options, value, description and toggles |
@@ -33,19 +46,19 @@ inventory synchronized with the pinned public SDK.
 | per-value tag colors, rainbow dots | Forms: a `tags` Status key with `TagKey.colors` and no `color` (rainbow key dot); Gallery hues: a `"rainbow"` dot with `ui.options-field` |
 | timeline, composer (`ui.timeline`, `ui.composer`) | Output: dated Markdown notes with delete (X) and in-place edit (E), and a composer that adds a note. Fallback: plain text |
 | segmented control | Forms: values and option icons; Tables toolbar: accessible scope label and option hover/focus explanations, its value kept in the view |
-| dialog | Toolbar: title/description/children, wide/resizable/maximize behavior, primary/cancel/close events |
+| dialog | Toolbar: title/description/children, wide/resizable/maximize behavior, a primary action and ToolBelt's own Cancel (`dialog-close`) |
 | log | Output: timestamps, tones, follow, empty state and bounded event history |
 | terminal | Output: ANSI fixture lines, append/follow/empty, text zoom and wrapping |
 | conversation | Output: all four roles, author/time/Markdown, expandable tool name/input/output, empty and optional fallback |
 | floating window (`ui.floating`) | ⌘J or its sidebar item: a `bar` with `suggestions` grouped Continue (`metaAt`) and Try (`meta`), whose composer asks; a `panel` with `subtitle` and icon `actions`, a conversation with a pinned composer, a form (stacked labels, page scroll), a 40-row list, and `busy` (a 3 s timer: sidebar spinner, then a dot). Required: the manifest's `floating` needs it |
 | assets/icons | Gallery and Tables: lucide names, declared namespaced SVG |
 | keyboard | Declared screen shortcuts, table P/T action keys and host navigation/menu/dialog patterns |
-| badge/toast/clipboard | Toolbar and Lifecycle: number/string/null badge, toast action/payload, undo and fixture copy |
+| badge/toast/clipboard | Toolbar and Lifecycle: number/string/null badge, toast action/payload, undo and fixture copy; Actions: Clear items' toast with Undo and a ⌘Z key (`ui.toast-key`, optional) |
 | lifecycle | Startup/ready, preparation defer/retry, shutdown persistence and schema-1 initialization |
 | data/package/payload | Managed counter, immutable packageRoot, payload text resolution and declared asset |
-| main and quick surfaces | Six screens and a compact view sharing the same runtime/counter |
+| main and quick surfaces | Seven screens and a compact view sharing the same runtime/counter |
 | optional native handoff | Lifecycle's declared counter action, supported-host behavior and safe fallback |
-| agent access (manifest `agent.access`) | Manifest declares `read`; Lifecycle shows it. Agents can read every screen, and the Forms text field marked `sensitive` stays masked for them. Hosts without the agent interface ignore the key |
+| agent access (manifest `agent.access`) | Manifest declares `act`; Lifecycle shows it. Agents read every screen and act in copies of their own, the person approving as each effect requires. The Forms text field marked `sensitive` stays masked and isn't offered to them, nor is Restore samples (`agent: false`) |
 
 The `ui.conversation` fallback uses plain text when negotiated support is absent.
 The option list, rainbow dot and notes stay optional. A host that doesn't negotiate them gets a
@@ -55,11 +68,12 @@ handoff support. Capability tests advertise every required manifest capability a
 only optional support. The demo does not perform external terminal focus or real updates.
 
 For a new SDK feature, add its manifest declaration if needed, a visible scenario, event
-handling/fallback and meaningful tests. Verify the extracted release archive and use the
-production Plugin Tester for layout, keyboard, appearance and quick-view behavior.
+handling/fallback and meaningful tests. Verify the extracted release archive and open it in
+ToolBelt's plugin development mode for layout, keyboard, appearance and quick-view behavior.
 
-SDK Explorer requires Toolbelt 0.6.0 (plugin protocol 2) and SDK 0.4.0 for views, instances,
-`declareViews`, grouping filters and the choice control.
+SDK Explorer requires ToolBelt 0.10.0 (plugin protocol 3) and SDK 0.7.0 for action and form
+declarations, results, event tags, per-instance hooks, refused views, allowed values and clearing a
+sort. ToolBelt 0.6.0 and SDK 0.4.0 brought views, instances, grouping filters and the choice control.
 Toolbar controls require Toolbelt 0.3.1 or newer and the published SDK containing page controls.
 Rich fields, sections, unread rows, drag-to-reorder, select events and modifier keys require
 Toolbelt 0.3.9 or newer and SDK 0.3.5. The option list and rainbow dots need Toolbelt 0.3.16
