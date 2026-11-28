@@ -1,4 +1,4 @@
-// Views (protocol 2): every search, filter, filter arrangement, sort and page control in SDK
+// Views: every search, filter, filter arrangement, sort and page control in SDK
 // Explorer is SDK-owned. This module holds the declarations and the Views screen, which shows the
 // instance and view it renders for and builds filters from fixture data it can change.
 import {PERSON,resolveView,type Action,type Filter,type GroupLabel,type Node,type Row,type View,type ViewDeclaration} from '@toolbelt/sdk';
@@ -32,16 +32,24 @@ export const MAX_GROUP_LEVELS=2;
 const DAY=86_400_000;
 /** Due times count from plugin start, so unchanged trees stay identical and the SDK doesn't resend them. */
 const START=Date.now();
-export const SCREENS=['gallery','table','views','forms','output','lifecycle'] as const;
+export const SCREENS=['gallery','table','views','actions','forms','output','lifecycle'] as const;
 export const labelFilter=(kind:string)=>`label-${kind}`;
 
-/** Every surface's view controls and where they start. Read at the handshake and on `declareViews()`. */
+/**
+ * Every surface's view controls, where they start and (Views) the values they may take. Read at the
+ * handshake, again after `start` (which loads the saved label kinds) and on `ctx.declare()`.
+ */
 export function declarations(s:Pick<State,'labelKinds'>):Record<string,ViewDeclaration>{
  const labels=s.labelKinds.map(labelFilter);
+ const labelOptions=Object.fromEntries(LABEL_KINDS.filter(k=>s.labelKinds.includes(k.id)).map(k=>[labelFilter(k.id),[...k.values]]));
  return {
   'screen:gallery':{search:true},
   'screen:table':{search:true,filters:{fixtures:[]},sort:{'capability-table':{key:'name',desc:false}},controls:{'fixture-scope':'focused'}},
-  'screen:views':{search:true,filters:{status:[...ONGOING],...Object.fromEntries(labels.map(id=>[id,[]]))},sort:{'view-tasks':{key:'due',desc:false}},controls:{due:'any'},arrange:{order:['status',...labels],grouped:['status']}},
+  'screen:views':{search:true,filters:{status:[...ONGOING],...Object.fromEntries(labels.map(id=>[id,[]]))},sort:{'view-tasks':{key:'due',desc:false}},controls:{due:'any'},arrange:{order:['status',...labels],grouped:['status']},
+   // Allowed values: the SDK refuses an agent's view outside them and drops them from a saved view.
+   options:{filters:{status:STATUS.map(x=>x.value),...labelOptions},controls:{due:DUE_OPTIONS.map(x=>x.value)}}},
+  // Starts sorted; agents can return it to unsorted (`sort: {"act-items": null}`).
+  'screen:actions':{search:true,sort:{'act-items':{key:'title',desc:false}}},
   'screen:forms':{search:true},
   'screen:output':{search:true},
   'screen:lifecycle':{search:true},
@@ -104,11 +112,21 @@ export function viewsPage(s:State,view:View,action:(id:string,label:string,extra
   controls:[{type:'choice',id:'due',label:'Due',icon:'calendar',value:view.controls.due??'any',options:DUE_OPTIONS}],
   filters:order.map(id=>byId[id]!),
   children:[
-   {type:'card',id:'view-state',title:`Rendering for ${view.instance}`,description:'The SDK keeps one view per open instance and calls render once for each. Every person’s screen shares “person”; each agent reads through an instance of its own, so its search and filters never change what you see.',tone:'info',children:[{type:'details',items:viewLines(view).map(l=>({...l,mono:l.label!=='Instance'}))}]},
-   {type:'card',id:'view-from-data',title:'View controls from data',description:'Each label kind is a declared filter. Adding or removing one changes the declaration: the plugin calls ctx.declareViews(), the SDK sends it again and drops view state for filters that went away.',actions:[action('add-label','Add label filter',{icon:'plus',disabled:active.length===LABEL_KINDS.length}),action('remove-label','Remove label filter',{icon:'minus',disabled:!active.length})],children:[{type:'text',text:`Declared filters: ${Object.keys(declared.filters??{}).join(', ')}`,mono:true},{type:'text',text:`Label kinds: ${active.map(k=>k.label).join(', ')||'none'}`,tone:'muted'}]},
+   {type:'card',id:'view-state',title:`Rendering for ${view.instance}`,description:'The SDK keeps one view per open instance and calls render once for each. Every person’s screen shares “person”; each agent reads and acts through instances of its own, so its search and filters never change what you see.',tone:'info',actions:[action('lock-view',s.viewLock?'Unlock view':'Lock view',{icon:s.viewLock?'lock-open':'lock'})],children:[
+    {type:'details',items:[...viewLines(view).map(l=>({...l,mono:l.label!=='Instance'})),
+     {label:'Allowed values',value:`status: ${STATUS.map(x=>x.value).join(', ')} · due: ${DUE_OPTIONS.map(x=>x.value).join(', ')} · label filters: their labels. The SDK refuses other values and drops them from a saved view.`,mono:true},
+     {label:'Lock',value:s.viewLock?'Locked: onView returns false, so every change here is refused and the instance keeps its view. Agents are told it was refused.':'Unlocked: Lock view makes onView refuse every change on this tab.',tone:s.viewLock?'warning':undefined}]},
+    ...(s.refusals.length?[{type:'log' as const,id:'view-refusals',lines:s.refusals.map(text=>({text:`refused ${text}`,tone:'muted' as const})),empty:'No refusals'}]:[])]},
+   {type:'card',id:'view-from-data',title:'View controls from data',description:'Each label kind is a declared filter. Adding or removing one changes the declaration: the plugin calls ctx.declare(), the SDK sends it again and drops view state for filters that went away. Label kinds are saved: start() loads them and the SDK sends the declarations again by itself.',actions:[action('add-label','Add label filter',{icon:'plus',disabled:active.length===LABEL_KINDS.length}),action('remove-label','Remove label filter',{icon:'minus',disabled:!active.length})],children:[{type:'text',text:`Declared filters: ${Object.keys(declared.filters??{}).join(', ')}`,mono:true},{type:'text',text:`Label kinds: ${active.map(k=>k.label).join(', ')||'none'}`,tone:'muted'}]},
    {type:'table',id:'view-tasks',columns:[{key:'name',title:'Task',grow:true,minWidth:200,sortable:true},{key:'status',title:'Status',width:110,sortable:true},...active.map(k=>({key:labelFilter(k.id),title:k.label,width:100,sortable:true,optional:true})),{key:'due',title:'Due',width:110,sortable:true},{key:'points',title:'Points',align:'right' as const,mono:true,sortable:true,sortDesc:true}],rows,...(sort?{sort}:{}),empty:{title:'No tasks in this view',description:'Clear the search, reset filters or choose Any time.',icon:'list-filter'}},
   ],
  };
+}
+
+/** Saved label kinds, as `start()` reads them: known ids only, in their declared order. */
+export function savedLabelKinds(value:unknown):LabelKind[]|null{
+ if(!Array.isArray(value))return null;
+ return LABEL_KINDS.map(k=>k.id).filter(id=>value.includes(id));
 }
 
 /** Adds the next label kind (`add-label`) or removes the last (`remove-label`). True when the declaration changed. */

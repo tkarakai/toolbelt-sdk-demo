@@ -1,45 +1,20 @@
-// Protocol 2 views through the production SDK: SDK Explorer's real definition behind a fake host.
-import {afterAll,expect,test} from 'bun:test';
-import {PERSON,type HostMessage,type Node,type PluginMessage,type ViewState} from '@toolbelt/sdk';
-import {fakeHost} from '@toolbelt/sdk/testing';
+// Views through the production SDK (protocol 3): SDK Explorer's real definition behind a fake host.
+import {expect,test} from 'bun:test';
+import {PERSON,type Node,type PluginMessage} from '@toolbelt/sdk';
 import {validateTree} from '@toolbelt/sdk/validation';
-import {mkdtempSync,rmSync} from 'node:fs';
-import {tmpdir} from 'node:os';
-import {join} from 'node:path';
-import {sdkExplorer} from '../src/plugin';
-import {initialState,type State} from '../src/scenarios';
 import {SCREENS,TASKS,declarations} from '../src/views';
+import {manifest,started,type Page} from './host';
 
-const data=mkdtempSync(join(tmpdir(),'sdk-demo-views-'));
-Object.assign(process.env,{TOOLBELT_DATA_DIR:data,TOOLBELT_PACKAGE_ROOT:join(import.meta.dir,'..'),TOOLBELT_PLUGIN:'sdk-demo',TOOLBELT_PLUGIN_VERSION:'0.0.1'});
-afterAll(()=>rmSync(data,{recursive:true,force:true}));
-const manifest=await Bun.file(new URL('../toolbelt.json',import.meta.url)).json();
-type Page=Extract<Node,{type:'page'}>;type Table=Extract<Node,{type:'table'}>;
-
-/** A started plugin with helpers to open instances and read what it sent. */
-async function started(state:State=initialState()){
- const host=fakeHost(sdkExplorer(state));
- const settle=()=>Bun.sleep(5);
- host.send({type:'hello',protocol:2,plugin:{id:'sdk-demo'},host:{name:'views fixture host',version:'0.6.0'},capabilities:[...manifest.capabilities.required]});
- await settle();
- const send=async(m:HostMessage)=>{host.send(m);await settle();};
- const renders=(surface:string,instance:string)=>host.messages.filter((m):m is Extract<PluginMessage,{type:'render'}>=>m.type==='render'&&m.surface===surface&&m.instance===instance);
- const page=(surface:string,instance=PERSON)=>{const r=renders(surface,instance).at(-1);if(!r||r.tree.type!=='page')throw Error(`No page rendered for ${surface} ${instance}`);return r.tree as Page;};
- const table=(p:Page,id:string)=>p.children.find((n):n is Table=>n.type==='table'&&n.id===id)!;
- const event=(surface:string,instance:string,name:string,payload?:unknown)=>send({type:'event',surface,instance,name,payload});
- return {host,state,send,renders,page,table,event,open:(surface:string,instance=PERSON,view?:ViewState)=>send({type:'open',surface,instance,...(view?{view}:{})})};
-}
-
-test('the manifest speaks protocol 2 and every screen has a declared view',async()=>{
- expect(manifest.protocol).toBe(2);expect(manifest.agent.access).toBe('read');expect(manifest.requires.host).toBe('>=0.7.1');
+test('the manifest speaks protocol 3 and every screen has a declared view',async()=>{
+ expect(manifest.protocol).toBe(3);expect(manifest.agent.access).toBe('act');expect(manifest.requires.host).toBe('>=0.10.0');
  expect(manifest.screens.map((s:{id:string})=>s.id)).toEqual([...SCREENS]);
  const {host}=await started();
  try{
   const hello=host.messages.find(m=>m.type==='hello');
   if(hello?.type!=='hello')throw Error('No hello');
-  expect(hello.protocol).toBe(2);
-  expect(Object.keys(hello.views??{}).sort()).toEqual(SCREENS.map(id=>`screen:${id}`).sort());
-  expect(hello.views?.['screen:views']).toEqual({search:true,filters:{status:['open','doing'],'label-area':[]},sort:{'view-tasks':{key:'due',desc:false}},controls:{due:'any'},arrange:{order:['status','label-area'],grouped:['status']}});
+  expect(hello.protocol).toBe(3);
+  expect(Object.keys(hello.declarations.views).sort()).toEqual(SCREENS.map(id=>`screen:${id}`).sort());
+  expect(hello.declarations.views['screen:views']).toEqual({search:true,filters:{status:['open','doing'],'label-area':[]},sort:{'view-tasks':{key:'due',desc:false}},controls:{due:'any'},arrange:{order:['status','label-area'],grouped:['status']},options:{filters:{status:['open','doing','blocked','done'],'label-area':['Docs','Build','Design']},controls:{due:['any','week','overdue']}}});
  }finally{host.close();}
 });
 
@@ -134,7 +109,7 @@ test('agent instances render independently and never change the person\'s view',
   expect(t.page('screen:views').dialog?.id).toBe('fixture-dialog');
   expect(t.page('screen:views','agent:one').dialog).toBeUndefined();
   // The host setting the person's view (Restore, an agent showing something) re-renders it.
-  await t.send({type:'view',surface:'screen:views',instance:PERSON,view:{search:'palette',controls:{due:'any'}}});
+  await t.host.setView('screen:views',PERSON,{search:'palette',controls:{due:'any'}});
   expect(t.page('screen:views').search?.query).toBe('palette');
   expect(t.page('screen:views','agent:one').search?.query).toBe('guide');
  }finally{t.host.close();}
@@ -145,7 +120,7 @@ test('label filters come from data and are declared again when they change',asyn
  try{
   await t.open('screen:views');await t.open('screen:views','agent:one');
   await t.event('screen:views',PERSON,'add-label');
-  const declared=()=>t.host.messages.filter((m):m is Extract<PluginMessage,{type:'views'}>=>m.type==='views').at(-1)?.views['screen:views'];
+  const declared=()=>t.host.messages.filter((m):m is Extract<PluginMessage,{type:'declarations'}>=>m.type==='declarations').at(-1)?.declarations.views['screen:views'];
   expect(declared()?.filters).toEqual({status:['open','doing'],'label-area':[],'label-size':[]});
   expect(declared()?.arrange?.order).toEqual(['status','label-area','label-size']);
   // Both instances show the new filter, in their saved arrangement plus the new id.
@@ -178,6 +153,8 @@ test('every screen renders a valid tree for the person and for an agent',async()
  try{
   for(const id of SCREENS){await t.open(`screen:${id}`);await t.open(`screen:${id}`,'agent:check');}
   for(const id of SCREENS)for(const instance of [PERSON,'agent:check'])expect(()=>validateTree(t.page(`screen:${id}`,instance))).not.toThrow();
+  // Every action and form the trees use is declared, and every message passes the host's checks.
+  expect(t.host.rejected).toEqual([]);expect(t.host.invalid).toEqual([]);
   expect(Object.keys(declarations(t.state))).toEqual(SCREENS.map(id=>`screen:${id}`));
  }finally{t.host.close();}
 });

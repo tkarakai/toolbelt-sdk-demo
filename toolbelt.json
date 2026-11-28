@@ -2,14 +2,14 @@
   "formatVersion": 1,
   "id": "sdk-demo",
   "name": "SDK Explorer",
-  "description": "An interactive guide to every public Toolbelt UI and lifecycle capability. Safe to remove.",
+  "description": "An interactive guide to every public Toolbelt UI, action and lifecycle capability. Safe to remove.",
   "icon": "blocks",
   "version": "0.4.0",
-  "protocol": 2,
+  "protocol": 3,
   "entry": "index.js",
   "repo": "tkarakai/toolbelt-sdk-demo",
   "requires": {
-    "host": ">=0.7.1",
+    "host": ">=0.10.0",
     "bun": ">=1.3.0",
     "platforms": [
       "portable"
@@ -28,14 +28,18 @@
       "ui.modifier-keys",
       "ui.filter-group",
       "ui.choice-control",
-      "ui.floating"
+      "ui.floating",
+      "ui.split-action",
+      "navigate",
+      "ui.row-pane"
     ],
     "optional": [
       "ui.conversation",
       "native.handoff",
       "ui.options-field",
       "ui.timeline",
-      "ui.composer"
+      "ui.composer",
+      "ui.toast-key"
     ]
   },
   "data": {
@@ -63,6 +67,12 @@
       "title": "Views",
       "icon": "list-filter",
       "shortcut": "v"
+    },
+    {
+      "id": "actions",
+      "title": "Actions",
+      "icon": "zap",
+      "shortcut": "a"
     },
     {
       "id": "forms",
@@ -94,6 +104,6 @@
     "handoff-count"
   ],
   "agent": {
-    "access": "read"
+    "access": "act"
   }
 }

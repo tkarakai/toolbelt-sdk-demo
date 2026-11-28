@@ -1,6 +1,9 @@
 # Changelog
 
 ## Unreleased
+- Requires ToolBelt 0.10.0: SDK Explorer speaks plugin protocol 3 with SDK 0.7.0, declares every action and form with what it does, and lets AI agents act on it (`agent.access: act`) as well as read it. Everything an agent can do here is harmless: the data is fixtures in memory and the demo counter, and the external action only says what it would open.
+- Add an Actions tab (`a`): one action of every effect (a tip only your instance shows, Add item as a split button with Add three and New item…, Open the SDK guide with a confirmation that opens nothing, Clear items with a confirmation and a toast whose Undo (⌘Z) brings them back, and Restore samples, which agents never see). Fixture items sit in a sortable table in a card: select one to edit it in the drawer (each field saves), rename it from its menu, copy its title or id (a split menu), delete it with a confirmation, or mark several done. New item… opens a draft dialog only your instance shows. Show on Views navigates to an overdue task, Fail on purpose and Decline show an error and an unhandled result, and panels show the last events (id, origin, instance and outcome, with the data an action returned) and every open instance, the person's and each agent's.
+- Views tab: Lock view makes the plugin refuse every view change there (the screen keeps its view and agents are told), and the Status and label filters and the Due choice declare the values they allow. Label filters you add are saved and come back after a restart.
 
 ## 0.4.0 — 2026-11-27
 - Requires ToolBelt 0.7.1 (SDK 0.5.1). Add a floating window (⌘J, or its item at the bottom of the sidebar): an ask bar with recent chats under Continue (with when they were used) and things to try, which grows into a panel with canned answers, a form, a long list, and simulated work that spins the sidebar item while the window is minimized and leaves a dot when done. Nothing is sent anywhere.

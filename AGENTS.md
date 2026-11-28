@@ -27,8 +27,8 @@ Explorer plugin and its conformance scenarios.
 - Update scenarios, `COVERAGE`, inventory and tests together when using new SDK features.
   Optional capabilities require executable fallback behavior.
 - Run `bun run typecheck`, `bun test`, `bun run package` and
-  `bun scripts/verify-package.ts`. Use Toolbelt Plugin Tester for visual/keyboard/native
-  surface work with disposable profiles.
+  `bun scripts/verify-package.ts`. Open the archive in ToolBelt's plugin development mode
+  with a disposable profile for visual, keyboard, native and agent work.
 - Archives must contain all runtime dependencies and payloads and run after extraction
   without source checkouts or ambient dependency directories.
 
